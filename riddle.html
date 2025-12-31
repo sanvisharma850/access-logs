@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Integrity Check Failed</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #b30000;
+      font-family: Consolas, monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .panel {
+      text-align: center;
+      max-width: 520px;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+
+    button {
+      background: none;
+      border: 1px solid #b30000;
+      color: #b30000;
+      padding: 12px 24px;
+      margin: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #b30000;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+
+<div class="panel">
+  <p>
+    You counted everyone who was invited.<br><br>
+    Did you count the one<br>
+    who never needs permission?
+  </p>
+
+  <button onclick="wrong()">Option A — Missing username</button>
+  <button onclick="right()">Option B — Missing role</button>
+</div>
+
+<script>
+  function wrong() {
+    alert("The system accepts names. Power leaves no name.");
+  }
+
+  function right() {
+    alert("Correct. Administrative actions were never logged.");
+    // later redirect to next challenge
+  }
+</script>
+
+</body>
+</html>

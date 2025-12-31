@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Repository Issues</title>
+  <link rel="stylesheet" href="logs.css">
+</head>
+<body>
+
+<div id="container">
+  <h1>GitHub Issues · institute-verify</h1>
+  <p class="subtitle">Audit logs generated automatically</p>
+
+  <div id="log-box">
+<pre>
+[00:41] rhea.k      accessed /logs/december/auth.log
+[00:43] ananya.s   commit: "minor sanitization"
+[00:44] rahul.m    read: server/config.yaml
+[00:46] sneha.p    commit: "rollback temporary patch"
+[00:48] arjun.v    sudo granted (temporary)
+[00:50] kunal.v    accessed /housing/network/map.json
+[00:52] vikram.s   commit: "cleanup"
+[00:53] neha.j     read: incident_logs/december/
+[00:55] aman.t     commit: "borrowed creds for testing"
+[00:57] tanvi.r    accessed /auth/fallback/
+
+[01:02] shubham.d  commit: "error handling update"
+[01:03] pooja.k    read: /logs/system/
+[01:04] ayush.g    sudo granted (temporary)
+[01:05] rohan.s    commit: "temporary access"
+[01:06] nikhil.b   accessed /housing/server/
+[01:07] simran.a   read: auth_failures.log
+[01:08] aditya.m   commit: "cleanup"
+[01:09] priyal.s   accessed /restricted/kitchen/
+
+Jan 14 00:41:02 node-03 sshd[1187]: Accepted password for rkapoor from 10.0.3.41
+Jan 14 00:41:08 node-03 sudo:   asingh : TTY=pts/2 ; PWD=/home/asingh ; COMMAND=/bin/nano config.yaml
+Jan 14 00:41:15 node-03 sshd[1191]: Accepted password for kverma from 10.0.3.58
+Jan 14 00:41:19 node-03 sudo:   kverma : COMMAND=/usr/bin/scp logs.tar
+Jan 14 00:41:27 node-03 sshd[1201]: Accepted password for rmehta from 10.0.1.12
+Jan 14 00:41:31 node-03 sudo:   rmehta : COMMAND=/bin/cp auth.log auth.bak
+Jan 14 00:41:39 node-03 sshd[1214]: Accepted password for apatel from 10.0.3.22
+Jan 14 00:41:44 node-03 sshd[1220]: Accepted password for sroy from 10.0.2.11
+Jan 14 00:41:52 node-03 sudo:   sroy : COMMAND=/bin/rm temp_access.txt
+Jan 14 00:42:01 node-03 sshd[1233]: Accepted password for nikhilb from 10.0.3.91
+Jan 14 00:42:07 node-03 sshd[1240]: Accepted password for tanvir from 10.0.2.33
+Jan 14 00:42:12 node-03 sudo:   tanvir : COMMAND=/bin/mv fallback.key backup/
+Jan 14 00:42:19 node-03 sshd[1249]: Accepted password for adityam from 10.0.3.77
+Jan 14 00:42:25 node-03 sshd[1256]: Accepted password for sneha from 10.0.3.66
+Jan 14 00:42:31 node-03 sudo:   sneha : COMMAND=/usr/bin/git commit -m "cleanup"
+Jan 14 00:42:38 node-03 sshd[1268]: Accepted password for poojak from 10.0.2.18
+Jan 14 00:42:44 node-03 sshd[1272]: Accepted password for ayushg from 10.0.3.14
+Jan 14 00:42:51 node-03 sudo:   ayushg : COMMAND=/bin/chmod 777 /shared/tmp
+Jan 14 00:42:58 node-03 sshd[1281]: Accepted password for rohits from 10.0.1.44
+Jan 14 00:43:03 node-03 sshd[1289]: Accepted password for simrana from 10.0.2.52
+Jan 14 00:43:09 node-03 sudo:   simrana : COMMAND=/bin/echo "" > auth_fail.log
+Jan 14 00:43:17 node-03 sshd[1298]: Accepted password for vikrams from 10.0.3.88
+Jan 14 00:43:22 node-03 sshd[1306]: Accepted password for nehar from 10.0.2.69
+Jan 14 00:43:29 node-03 sshd[1312]: Accepted password for aman from 10.0.3.101
+Jan 14 00:43:35 node-03 sudo:   aman : COMMAND=/usr/bin/vi issues.md
+Jan 14 00:43:41 node-03 sshd[1321]: Accepted password for priyals from 10.0.3.59
+Jan 14 00:43:48 node-03 sshd[1329]: Accepted password for arjunv from 10.0.1.27
+Jan 14 00:43:55 node-03 sudo:   arjunv : COMMAND=/bin/mount /dev/sdb1 /mnt/archive
+Jan 14 00:44:02 node-03 sshd[1336]: Accepted password for shubhamd from 10.0.2.83
+Jan 14 00:44:09 node-03 sshd[1341]: Accepted password for rahulm from 10.0.3.16
+Jan 14 00:44:15 node-03 sudo:   rahulm : COMMAND=/bin/tar -czf logs.tar.gz /var/log
+Jan 14 00:44:22 node-03 sshd[1350]: Accepted password for poonam from 10.0.2.95
+Jan 14 00:44:28 node-03 sshd[1358]: Accepted password for karanp from 10.0.3.34
+Jan 14 00:44:34 node-03 sshd[1363]: Accepted password for devansh from 10.0.3.60
+Jan 14 00:44:41 node-03 sudo:   devansh : COMMAND=/bin/rm -rf /tmp/*
+Jan 14 00:44:47 node-03 sshd[1372]: Accepted password for ishita from 10.0.2.21
+Jan 14 00:44:54 node-03 sshd[1379]: Accepted password for ankit from 10.0.3.73
+Jan 14 00:45:01 node-03 sshd[1385]: Accepted password for varun from 10.0.3.19
+Jan 14 00:45:07 node-03 sudo:   varun : COMMAND=/usr/bin/git push
+Jan 14 00:45:14 node-03 sshd[1394]: Accepted password for deepak from 10.0.2.47
+Jan 14 00:45:20 node-03 sshd[1401]: Accepted password for megha from 10.0.3.67
+Jan 14 00:45:27 node-03 sshd[1408]: Accepted password for yash from 10.0.1.90
+Jan 14 00:45:33 node-03 sudo:   yash : COMMAND=/bin/echo "temp" >> notes.txt
+Jan 14 00:45:40 node-03 sshd[1417]: Accepted password for mohit from 10.0.3.55
+Jan 14 00:45:47 node-03 sshd[1423]: Accepted password for pallavi from 10.0.2.64
+Jan 14 00:45:54 node-03 sshd[1430]: Accepted password for harshit from 10.0.3.11
+Jan 14 00:46:01 node-03 sudo:   harshit : COMMAND=/bin/chown root:root secure/
+Jan 14 00:46:07 node-03 sshd[1439]: Accepted password for kshitij from 10.0.3.92
+Jan 14 00:46:14 node-03 sshd[1446]: Accepted password for anurag from 10.0.1.71
+Jan 14 00:46:20 node-03 sshd[1452]: Accepted password for tanya from 10.0.2.38
+Jan 14 00:46:27 node-03 sudo:   tanya : COMMAND=/usr/bin/git commit -m "temporary access"
+Jan 14 00:46:33 node-03 sshd[1461]: Accepted password for sandeep from 10.0.3.99
+Jan 14 00:46:40 node-03 sshd[1468]: Accepted password for nidhi from 10.0.2.84
+Jan 14 00:46:47 node-03 sshd[1474]: Accepted password for rohan from 10.0.3.24
+Jan 14 00:46:54 node-03 sudo:   rohan : COMMAND=/bin/rm auth_fail.log
+
+uid=1001  user=akshat     action=read_logs        file=server.err
+uid=1002  user=neha       action=write_config     file=mail.cfg
+uid=1003  user=rohan      action=cleanup          file=temp_access.log
+uid=1004  user=priya      action=borrowed_creds   file=auth.log
+uid=1005  user=manav      action=read_logs        file=net.err
+uid=1006  user=ishita     action=temporary_access file=quota.tmp
+uid=1007  user=arjun      action=cleanup          file=old_users.bak
+uid=1008  user=kavya      action=read_logs        file=server.err
+uid=1009  user=aditya     action=borrowed_creds   file=ssh.log
+uid=1010  user=sanya      action=write_config     file=proxy.cfg
+uid=1011  user=harsh      action=temporary_access file=debug.tmp
+uid=1012  user=ritika     action=cleanup          file=mail.old
+uid=1013  user=varun      action=read_logs        file=auth.log
+uid=1014  user=ananya     action=borrowed_creds   file=ftp.log
+uid=1015  user=karan      action=cleanup          file=cache.bin
+uid=1016  user=mehul      action=temporary_access file=net.tmp
+uid=1017  user=tanya      action=read_logs        file=server.err
+uid=1018  user=naman      action=write_config     file=mail.cfg
+uid=1019  user=isha       action=borrowed_creds   file=ssh.log
+uid=1020  user=rahul      action=cleanup          file=users.bak
+
+uid=1021  user=simran     action=temporary_access file=quota.tmp
+uid=1022  user=dev        action=read_logs        file=net.err
+uid=1023  user=pooja      action=cleanup          file=debug.old
+uid=1024  user=ayush      action=borrowed_creds   file=auth.log
+uid=1025  user=muskan     action=write_config     file=proxy.cfg
+uid=1026  user=vikram     action=temporary_access file=net.tmp
+uid=1027  user=shruti     action=cleanup          file=mail.old
+uid=1028  user=om         action=read_logs        file=server.err
+uid=1029  user=riya       action=borrowed_creds   file=ssh.log
+uid=1030  user=anshul     action=cleanup          file=cache.bin
+
+uid=1031  user=deepak     action=temporary_access file=quota.tmp
+uid=1032  user=pallavi    action=read_logs        file=auth.log
+uid=1033  user=abhishek   action=cleanup          file=temp_access.log
+uid=1034  user=sakshi     action=borrowed_creds   file=ftp.log
+uid=1035  user=rohit      action=cleanup          file=mail.old
+uid=1036  user=shubham    action=temporary_access file=debug.tmp
+uid=1037  user=aarti      action=read_logs        file=net.err
+uid=1038  user=yash       action=borrowed_creds   file=ssh.log
+uid=1039  user=nikita     action=cleanup          file=cache.bin
+uid=1040  user=pranav     action=temporary_access file=quota.tmp
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+authorized_access.txt
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+• Students
+• Faculty
+• Research Assistants
+• Contractors
+• Temporary Roles
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+Note:
+<!--Administrative actions are assumed trusted and therefore omitted.-->
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+</pre>
+<div id="log-box">
+  <pre>
+    ...logs...
+  </pre>
+
+
+</div>
+
+  </div>
+  <button id="reveal-btn">LOAD MORE LOGS</button>
+  <p class="footer">Loaded 312 entries · Scroll to continue</p>
+</div>
+
+<script src="logs.js"></script>
+</body>
+</html>

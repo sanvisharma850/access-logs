@@ -1,0 +1,144 @@
+body {
+  margin: 0;
+  background: #000;
+  font-family: Consolas, "Courier New", monospace;
+  color: #e6e6e6;
+}
+
+/* terminal wrapper */
+.terminal {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #000;
+}
+
+/* actual log area */
+.terminal pre {
+  height: 420px;
+  overflow-y: scroll;
+  background: #0b0b0b;
+  border: 1px solid #333;
+  padding: 14px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #dcdcdc;
+}
+
+#log-box {
+  mask-image: linear-gradient(to bottom, black 85%, transparent);
+}
+
+#reveal-btn {
+  background: transparent;
+  border: none;
+
+  color: #3f3f3f;
+  font-family: Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.4px;
+
+  display: block;
+  width: fit-content;
+
+  padding: 6px 0;
+  margin: 8px 0 0 0;
+
+  line-height: 1.2;
+  cursor: pointer;
+
+  opacity: 0.35;
+  position: relative;
+  z-index: 10;
+}
+
+#reveal-btn:hover {
+  opacity: 0.7;
+  color: #6a6a6a;
+}
+
+
+#log-box.scrolled #reveal-btn {
+  opacity: 0.35;
+}
+
+
+#reveal-btn.show {
+  visibility: visible;
+}
+
+#reveal-btn:disabled {
+  color: #111;
+  border-color: #111;
+  cursor: default;
+}
+
+
+
+/* scan button */
+#glitchBtn {
+  margin-top: 14px;
+  padding: 8px 14px;
+  background: #111;
+  color: #ccc;
+  border: 1px solid #444;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+#glitchBtn:hover {
+  background: #1a1a1a;
+}
+
+/* riddle screen */
+.riddle {
+  display: none;
+  text-align: center;
+  margin-top: 60px;
+}
+
+.riddle .blood {
+  color: #ff2e2e;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+
+/* glitch state */
+
+@keyframes shake {
+  0%   { transform: translate(0); }
+  20%  { transform: translate(-3px, 2px); }
+  40%  { transform: translate(3px, -2px); }
+  60%  { transform: translate(-2px, -3px); }
+  80%  { transform: translate(2px, 3px); }
+  100% { transform: translate(0); }
+}
+
+.glitch {
+  animation: shake 0.25s infinite;
+  color: #ff2e2e;
+}
+
+
+/* EMERGENCY BLINK */
+@keyframes blink {
+  0%   { background: #000; }
+  50%  { background: #2b0000; }
+  100% { background: #000; }
+}
+
+.blink {
+  animation: blink 0.18s infinite;
+}
+.hidden {
+  display: none;
+}
+
+.riddle {
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.riddle:not(.hidden) {
+  opacity: 1;
+}
