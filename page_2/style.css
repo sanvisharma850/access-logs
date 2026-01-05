@@ -1,0 +1,38 @@
+body {
+  background: #111;
+  color: rgb(244, 249, 244);
+  font-family: monospace;
+  padding: 20px;
+}
+
+.data {
+  user-select: none;
+  pointer-events: none;
+  margin-bottom: 40px;
+}
+
+.login-box {
+  pointer-events: auto;
+}
+
+input, button {
+  display: block;
+  margin: 10px 0;
+  padding: 8px;
+}
+
+#list {
+  user-select: none;
+}
+
+.employee {
+  margin-bottom: 35px;       /* big gap between employees */
+  padding: 20px 0;           /* extra breathing space */
+  line-height: 1.8;          /* slow reading */
+  border-bottom: 1px solid #333;
+}
+
+#list {
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
