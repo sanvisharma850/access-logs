@@ -1,9 +1,13 @@
-const allowed = localStorage.getItem("challenge4_completed");
+const stage = localStorage.getItem("challenge5_stage");
 
-if (allowed !== "true") {
+if (stage !== "page_1") {
   document.body.innerHTML = `
-    <h1>403 — Incomplete Audit Trail</h1>
-    <p>Some logs were never meant to be seen.</p>
+    <h1>401 — Session Desynced</h1>
+    <p>Audit sequence not initialized.</p>
   `;
-  throw new Error("Unauthorized access to Challenge 5");
+  throw new Error("Invalid entry point");
+}
+function completePage1() {
+  localStorage.setItem("challenge5_stage", "page_2");
+  window.location.href = "https://sanvisharma850.github.io/access-logs/page_2/";
 }
