@@ -57,14 +57,29 @@
 
 <script>
   function wrong() {
+    localStorage.setItem("challenge4_outcome", "false_branch");
+
     alert("The system accepts names. Power leaves no name.");
+
+    // Send to a convincing dead end or loop
+    setTimeout(() => {
+      window.location.href = "https://sanvisharma850.github.io/access-logs/page_2/";
+    }, 800);
   }
 
   function right() {
+    // Legitimate access token
+    localStorage.setItem("challenge4_completed", "true");
+    localStorage.setItem("challenge5_stage", "page_1");
+
     alert("Correct. Administrative actions were never logged.");
-    // later redirect to next challenge
+
+    setTimeout(() => {
+      window.location.href = "https://sanvisharma850.github.io/access-logs/page_1/";
+    }, 800);
   }
 </script>
+
 
 </body>
 </html>
