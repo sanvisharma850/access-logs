@@ -1,8 +1,49 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="refresh" content="0; url=logs.html">
-    window.location.href = "logs.html";
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Phone Evidence</title>
+  <link rel="stylesheet" href="phone.css">
+</head>
+<body>
 
-  </head>
+<div class="scene">
+  <div class="phone">
+    <div class="screen">
+
+      <div class="status">
+        <span>01:02</span>
+        <span>🔒</span>
+      </div>
+
+      <div class="prompt">
+        Swipe up for Face ID<br>
+        or Enter Passcode
+      </div>
+
+      <div class="dots">○ ○ ○ ○ ○ ○</div>
+
+      <div class="keypad">
+        <button data-n="1">1<span> </span></button>
+        <button data-n="2">2<span>ABC</span></button>
+        <button data-n="3">3<span>DEF</span></button>
+        <button data-n="4">4<span>GHI</span></button>
+        <button data-n="5">5<span>JKL</span></button>
+        <button data-n="6">6<span>MNO</span></button>
+        <button data-n="7">7<span>PQRS</span></button>
+        <button data-n="8">8<span>TUV</span></button>
+        <button data-n="9">9<span>WXYZ</span></button>
+        <div></div>
+        <button data-n="0">0</button>
+        <div></div>
+      </div>
+
+      <div id="error"></div>
+
+    </div>
+  </div>
+</div>
+
+<script src="phone.js"></script>
+</body>
 </html>

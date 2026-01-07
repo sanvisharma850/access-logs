@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dr. Goyal’s Phone</title>
+  <link rel="stylesheet" href="unlocked.css" />
+</head>
+<body>
+  <div class="phone-shell">
+    <div class="status-bar">
+      <span>01:12</span>
+      <span>🔋</span>
+    </div>
+
+    <div class="app-grid">
+      <button class="app" onclick="openApp('notes')">📝<span>Notes</span></button>
+      <button class="app" onclick="openApp('chat')">💬<span>Chats</span></button>
+      <button class="app" onclick="openApp('gallery')" data-access="post-event">
+  🖼️<span>Gallery</span>
+</button>
+
+      <button class="app" onclick="openApp('calls')">📞<span>Calls</span></button>
+      <button class="app" onclick="openApp('riddle')">❓<span>Log</span></button>
+
+    </div>
+
+    <div id="app-view" class="hidden">
+      <button class="back" id="backBtn" onclick="closeApp()">← Back</button>
+
+      <div id="app-content"></div>
+    </div>
+  </div>
+
+  <script src="unlocked.js"></script>
+</body>
+</html>
+<!--
+01:05–01:10 AM
+Multiple edits.
+Single authority.
+
+You are looking for a person.
+You should be looking for a permission.
+-->
