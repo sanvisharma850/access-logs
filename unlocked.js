@@ -138,22 +138,37 @@ Emotional correlation is not causation.
 </span>`;
   }
 
-  if (choice === "editor") {
-    audio.heartbeat.pause();
-    audio.unlock.play();
-    navigator.vibrate?.([40]);
+if (choice === "editor") {
+  audio.heartbeat.pause();
+  audio.unlock.play();
+  navigator.vibrate?.([40]);
 
-    content.innerHTML =
-`Editor identity unavailable.
+  content.innerHTML = `
+    <div class="system">
+      <p><strong>ACCESS CONFIRMED</strong></p>
 
-Reason:
-Privileged action detected.
+      <p>You were not the killer.</p>
+      <p>You were the last editor.</p>
 
-<span class="system">
-Administrative edits do not require logging.
-</span>`;
-  }
+      <p>Logs were altered after the event.</p>
+      <p>The system preserved the truth.</p>
+
+      <br>
+
+      <button class="choice" id="proceedBtn">
+        Proceed to Access Logs
+      </button>
+    </div>
+  `;
+
+  document
+    .getElementById("proceedBtn")
+    .addEventListener("click", () => {
+      window.location.href =
+        "https://sanvisharma850.github.io/access-logs/logs.html";
+    });
 }
+
 
 /* DevTools trap */
 let devtoolsOpen = false;
