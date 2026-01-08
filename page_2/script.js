@@ -116,7 +116,7 @@ function check() {
 
   if (u === admin.username && p === admin.password) {
     // REDIRECT TO ADMIN PAGE
-    window.location.href = "../admin/index.html";
+    window.location.href = "https://sanvisharma850.github.io/access-logs/Admin/";
   } else {
     attempts++;
     if (attempts >= 2) {
