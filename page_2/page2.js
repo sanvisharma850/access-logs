@@ -9,5 +9,5 @@ if (stage !== "page_2") {
 }
 function completePage2() {
   localStorage.setItem("challenge5_stage", "admin");
-  window.location.href = "https://sanvisharma850.github.io/access-logs/Admin/";
+  window.location.href = "https://sanvisharma850.github.io/access-logs/Admin";
 }
