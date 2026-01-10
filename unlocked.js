@@ -77,11 +77,11 @@ Infrastructure assumes permission.`;
 
   /* CHAT */
   if (app === "chat") {
-    content.textContent = `[23:47] Kunal: You said this was temporary.
+    content.textContent = `[23:47] +91 xxxxxxxxx4: You said this was temporary.
 [23:49] Dr. Goyal: You don’t get to decide that.
-[23:52] Kunal: You’re selling access.
+[23:52] +91 xxxxxxxxx4: You’re selling access.
 [23:53] Dr. Goyal: I’m documenting misuse.
-[23:56] Kunal: If this gets out, you’re finished.
+[23:56] +91 xxxxxxxxx4: If this gets out, you’re finished.
 [typing…]
 [typing stopped]
 [Seen 00:01]`;
@@ -94,7 +94,7 @@ Infrastructure assumes permission.`;
 Duration: 02:31
 
 INCOMING
-12:58 — KUNAL VERMA
+12:58 — +91 xxxxxxxxx4
 Duration: 00:00 (MISSED)
 
 MISSED
@@ -208,7 +208,7 @@ Emotional correlation is not causation.
 <p>Editor identity unavailable.</p>
 <p>Audit attribution omitted.</p>
 
-<p>Administrative edits are assumed trusted.</p>
+<p>... edits are assumed trusted.</p>
 
 <br>
 
