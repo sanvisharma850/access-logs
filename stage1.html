@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOICE STRESS ANALYSIS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #1a0000, #0a0a0a);
+            border: 3px solid #ff4444;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.3);
+        }
+
+        .header h1 {
+            color: #ff4444;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 20px;
+            background: #0d0d0d;
+            border: 1px solid #333;
+        }
+
+        .progress-step {
+            text-align: center;
+            flex: 1;
+            padding: 10px;
+            border-right: 1px solid #333;
+            opacity: 0.5;
+        }
+
+        .progress-step:last-child {
+            border-right: none;
+        }
+
+        .progress-step.active {
+            opacity: 1;
+            color: #ff8888;
+        }
+
+        .progress-step.complete {
+            opacity: 1;
+            color: #ff4444;
+        }
+
+        .audio-analysis-box {
+            background: #000;
+            border: 2px solid #ff4444;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .waveform-container {
+            background: #0d0d0d;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid #333;
+            position: relative;
+        }
+
+        .waveform {
+            width: 100%;
+            height: 150px;
+            background: #000;
+            position: relative;
+            border: 1px solid #ff4444;
+            overflow: hidden;
+        }
+
+        .wave-bar {
+            position: absolute;
+            bottom: 0;
+            width: 2%;
+            background: linear-gradient(to top, #ff4444, #ff8888);
+            transition: height 0.3s;
+        }
+
+        .timestamp-marker {
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: #ffaa00;
+            z-index: 10;
+        }
+
+        .marker-label {
+            position: absolute;
+            top: -20px;
+            left: -30px;
+            background: #ffaa00;
+            color: #000;
+            padding: 3px 8px;
+            font-size: 10px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .transcript-box {
+            background: #1a1a1a;
+            border-left: 4px solid #ff4444;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            line-height: 2;
+        }
+
+        .speaker {
+            color: #4a9eff;
+            font-weight: bold;
+        }
+
+        .stress-word {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.2);
+            padding: 2px 5px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .stress-word:hover {
+            background: rgba(255, 68, 68, 0.4);
+            transform: scale(1.05);
+        }
+
+        .stress-word.selected {
+            background: rgba(255, 68, 68, 0.6);
+            border: 2px solid #ff4444;
+        }
+
+        .task-panel {
+            background: linear-gradient(135deg, #1a0000, #0a0a0a);
+            border: 2px solid #ff4444;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: #0d0d0d;
+            padding: 20px;
+            border: 1px solid #333;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            color: #ff4444;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .metric-label {
+            color: #888;
+            font-size: 12px;
+        }
+
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .selection-option {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 4px;
+        }
+
+        .selection-option:hover {
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .selection-option.selected {
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.2);
+        }
+
+        .btn {
+            background: #ff4444;
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: #ff6666;
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .hint-box {
+            background: rgba(255, 170, 0, 0.1);
+            border: 2px solid #ffaa00;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="color: #ff8888; font-size: 14px; margin-bottom: 10px;">✓ EMOTIONAL PATHWAY SELECTED</div>
+            <h1>VOICE STRESS ANALYSIS</h1>
+            <p style="color: #888; margin-top: 10px;">Analyzing last phone call: Dr. Goyal ↔ Kunal Verma</p>
+        </div>
+
+        <div class="progress-indicator">
+            <div class="progress-step active">
+                <div style="font-size: 24px;">⚡</div>
+                <div style="font-size: 11px; margin-top: 5px;">VOICE ANALYSIS</div>
+            </div>
+            <div class="progress-step">
+                <div style="font-size: 24px;">🔬</div>
+                <div style="font-size: 11px; margin-top: 5px;">FINGERPRINT MATCH</div>
+            </div>
+            <div class="progress-step">
+                <div style="font-size: 24px;">📊</div>
+                <div style="font-size: 11px; margin-top: 5px;">TIMELINE ANALYSIS</div>
+            </div>
+            <div class="progress-step">
+                <div style="font-size: 24px;">🎯</div>
+                <div style="font-size: 11px; margin-top: 5px;">FINAL VERDICT</div>
+            </div>
+        </div>
+
+        <div class="audio-analysis-box">
+            <h2 style="color: #ff4444; margin-bottom: 20px;">📞 CALL RECORDING RECOVERED</h2>
+            <div style="background: #0d0d0d; padding: 15px; margin-bottom: 20px; border-left: 3px solid #ffaa00;">
+                <strong style="color: #ffaa00;">CALL METADATA:</strong><br>
+                <span style="color: #888; font-size: 13px;">
+                Time: 12:58 AM | Duration: 4min 17sec | Caller: Kunal Verma | Recipient: Dr. Goyal
+                </span>
+            </div>
+
+            <div class="waveform-container">
+                <div style="color: #888; font-size: 12px; margin-bottom: 10px;">VOICE STRESS WAVEFORM</div>
+                <div class="waveform" id="waveform">
+                    <!-- Wave bars will be generated by JavaScript -->
+                    <div class="timestamp-marker" style="left: 40%;">
+                        <div class="marker-label">1:47 - Voice Tremor</div>
+                    </div>
+                    <div class="timestamp-marker" style="left: 68%;">
+                        <div class="marker-label">2:33 - Rapid Breathing</div>
+                    </div>
+                    <div class="timestamp-marker" style="left: 85%;">
+                        <div class="marker-label">3:42 - Voice Crack</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">STRESS LEVEL</div>
+                    <div class="metric-value">HIGH</div>
+                    <div style="color: #ff4444; font-size: 12px;">Elevated throughout</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">DECEPTION MARKERS</div>
+                    <div class="metric-value">73%</div>
+                    <div style="color: #ff4444; font-size: 12px;">Above threshold</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">EMOTIONAL STATE</div>
+                    <div class="metric-value">PANIC</div>
+                    <div style="color: #ff4444; font-size: 12px;">Fear/Desperation</div>
+                </div>
+            </div>
+
+            <div class="transcript-box">
+                <strong style="color: #ff8888; margin-bottom: 15px; display: block;">CALL TRANSCRIPT:</strong>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Kunal [00:08]:</span> Sir, we need to talk. Please.
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Dr. Goyal [00:12]:</span> Kunal, it's almost 1 AM.
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Kunal [00:15]:</span> I know, I know. But you can't do this. You can't <span class="stress-word" data-word="revoke">revoke</span> my access. Everything I've worked for...
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Dr. Goyal [00:23]:</span> You were careless. The audit logs don't lie.
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Kunal [00:28]:</span> I made a <span class="stress-word" data-word="mistake">mistake</span>. One mistake! Please, sir. My thesis, my job applications, <span class="stress-word" data-word="everything">everything</span> depends on this.
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Dr. Goyal [00:39]:</span> Then you should have thought about that before—
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Kunal [00:42]:</span> Before what? Before trying to help? I was <span class="stress-word" data-word="desperate">desperate</span> to meet the deadline!
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Dr. Goyal [00:48]:</span> That's not an excuse.
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Kunal [00:51]:</span> (voice cracking) If you report this, I'm <span class="stress-word" data-word="done">done</span>. My career is over before it even starts. Is that what you want?
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Dr. Goyal [01:02]:</span> What I want is for you to understand consequences.
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Kunal [01:08]:</span> I understand! I understand perfectly! You're going to <span class="stress-word" data-word="ruin">ruin</span> me because of one mistake!
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Dr. Goyal [01:15]:</span> Kunal, calm down—
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Kunal [01:18]:</span> Don't tell me to calm down! Do you know what it's like to have <span class="stress-word" data-word="everything">everything</span> you've worked for hanging by a thread? Do you?
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Dr. Goyal [01:28]:</span> This conversation is over.
+                </div>
+                
+                <div style="margin: 10px 0;">
+                    <span class="speaker">Kunal [01:31]:</span> Wait, wait! Please! I can't lose this <span class="stress-word" data-word="opportunity">opportunity</span>. Please! (breathing heavily)
+                </div>
+                
+                <div style="margin: 10px 0; color: #ff4444;">
+                    <span class="speaker">Dr. Goyal [01:41]:</span> [CALL ENDED]
+                </div>
+            </div>
+        </div>
+
+        <div class="task-panel">
+            <h2 style="color: #ff8888; margin-bottom: 20px;">🔍 TASK 1: IDENTIFY DECEPTION MARKERS</h2>
+            <p style="color: #ccc; line-height: 1.8; margin-bottom: 20px;">
+                Voice Stress Analysis (VSA) detects micro-tremors in vocal patterns that indicate deception or emotional distress. 
+                The transcript shows 7 highlighted stress points. Your task: identify which THREE phrases show the strongest 
+                deception markers based on the voice stress waveform peaks.
+            </p>
+
+            <div class="hint-box">
+                <strong style="color: #ffaa00;">FORENSIC HINT:</strong>
+                <p style="color: #888; font-size: 13px; margin-top: 10px; line-height: 1.6;">
+                    • Check timestamps against waveform markers (1:47, 2:33, 3:42)<br>
+                    • Peak stress at 40%, 68%, and 85% of call duration<br>
+                    • Call duration: 4min 17sec (257 seconds)<br>
+                    • Deception often appears when discussing motives or consequences
+                </p>
+            </div>
+
+            <div style="background: #0d0d0d; padding: 20px; margin: 20px 0;">
+                <strong style="color: #ff4444;">CLICK THREE STRESSED WORDS IN THE TRANSCRIPT ABOVE</strong>
+                <div id="selectedWords" style="margin-top: 15px; min-height: 40px; color: #ff8888;"></div>
+            </div>
+
+            <button class="btn" id="verifyBtn" onclick="verifySelection()" disabled>ANALYZE STRESS PATTERNS</button>
+            <div id="result" style="margin-top: 20px; display: none;"></div>
+        </div>
+
+        <div style="background: #0d0d0d; padding: 20px; border: 1px solid #333; margin-top: 30px;">
+            <h3 style="color: #ff4444; margin-bottom: 10px;">PRELIMINARY ANALYSIS:</h3>
+            <p style="color: #888; font-size: 13px; line-height: 1.8;">
+                → Subject exhibits extreme emotional distress<br>
+                → Multiple indicators of career-related desperation<br>
+                → Voice tremors increase when discussing consequences<br>
+                → Final plea shows uncontrolled panic state<br>
+                → Call ended abruptly by Dr. Goyal (refused further engagement)
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Generate waveform
+        const waveform = document.getElementById('waveform');
+        for (let i = 0; i < 50; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'wave-bar';
+            bar.style.left = (i * 2) + '%';
+            
+            // Create stress peaks at specific points
+            let height;
+            if (i >= 18 && i <= 22) height = 80; // 40% - "desperate"
+            else if (i >= 32 && i <= 36) height = 90; // 68% - "everything"
+            else if (i >= 41 && i <= 45) height = 95; // 85% - "opportunity"
+            else height = Math.random() * 40 + 20;
+            
+            bar.style.height = height + '%';
+            waveform.appendChild(bar);
+        }
+
+        // Handle stress word selection
+        let selectedWords = [];
+        const correctWords = ['desperate', 'everything', 'opportunity'];
+        
+        document.querySelectorAll('.stress-word').forEach(word => {
+            word.addEventListener('click', function() {
+                const wordText = this.dataset.word;
+                
+                if (this.classList.contains('selected')) {
+                    this.classList.remove('selected');
+                    selectedWords = selectedWords.filter(w => w !== wordText);
+                } else if (selectedWords.length < 3) {
+                    this.classList.add('selected');
+                    selectedWords.push(wordText);
+                }
+                
+                updateSelectedDisplay();
+                document.getElementById('verifyBtn').disabled = selectedWords.length !== 3;
+            });
+        });
+
+        function updateSelectedDisplay() {
+            const display = document.getElementById('selectedWords');
+            if (selectedWords.length === 0) {
+                display.textContent = 'No words selected';
+            } else {
+                display.textContent = `Selected: ${selectedWords.join(', ')} (${selectedWords.length}/3)`;
+            }
+        }
+
+        function verifySelection() {
+            const isCorrect = correctWords.every(w => selectedWords.includes(w)) && 
+                            selectedWords.length === 3;
+            
+            const resultDiv = document.getElementById('result');
+            
+            if (isCorrect) {
+                resultDiv.innerHTML = `
+                    <div style="background: rgba(255, 68, 68, 0.2); border: 2px solid #ff4444; padding: 25px; border-radius: 8px;">
+                        <div style="color: #ff8888; font-size: 20px; margin-bottom: 15px;">✓ DECEPTION MARKERS IDENTIFIED</div>
+                        <p style="color: #ccc; line-height: 2;">
+                            <strong>Analysis Complete:</strong><br>
+                            The three peak stress markers align with waveform anomalies at:<br>
+                            • "desperate" (1:47) - 87% stress indicator<br>
+                            • "everything" (2:33) - 91% stress indicator<br>
+                            • "opportunity" (3:42) - 94% stress indicator<br><br>
+                            
+                            <strong style="color: #ffaa00;">FORENSIC INTERPRETATION:</strong><br>
+                            Subject shows extreme physiological stress when discussing career consequences.
+                            Voice tremors, rapid breathing, and elevated heart rate suggest panic-driven state.
+                            Pattern consistent with someone facing imminent career destruction.<br><br>
+                            
+                            <span style="color: #ff4444;">Proceeding to physical evidence analysis...</span>
+                        </p>
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    window.location.href = 'stage2.html';
+                }, 4000);
+            } else {
+                resultDiv.innerHTML = `
+                    <div style="background: rgba(100, 100, 100, 0.2); border: 2px solid #666; padding: 20px; border-radius: 8px;">
+                        <div style="color: #888; font-size: 18px;">✗ PATTERN MISMATCH</div>
+                        <p style="color: #888; margin-top: 10px;">
+                            Selected markers don't align with waveform peaks. Review the timestamps and try again.
+                        </p>
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+            }
+        }
+
+        updateSelectedDisplay();
+    </script>
+</body>
+</html>

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIMELINE RECONSTRUCTION</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #1a0000, #0a0a0a);
+            border: 3px solid #ff4444;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 20px;
+            background: #0d0d0d;
+            border: 1px solid #333;
+        }
+
+        .progress-step {
+            text-align: center;
+            flex: 1;
+            padding: 10px;
+            border-right: 1px solid #333;
+            opacity: 0.5;
+        }
+
+        .progress-step:last-child {
+            border-right: none;
+        }
+
+        .progress-step.active {
+            opacity: 1;
+            color: #ff8888;
+        }
+
+        .progress-step.complete {
+            opacity: 1;
+            color: #ff4444;
+        }
+
+        .timeline-container {
+            position: relative;
+            padding-left: 80px;
+            margin: 40px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 40px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #ff4444, #cc0000);
+        }
+
+        .timeline-event {
+            position: relative;
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(26, 10, 10, 0.5);
+            border-left: 4px solid #ff4444;
+            border-radius: 4px;
+        }
+
+        .timeline-event::before {
+            content: '';
+            position: absolute;
+            left: -88px;
+            top: 25px;
+            width: 24px;
+            height: 24px;
+            background: #ff4444;
+            border: 5px solid #0a0a0a;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.8);
+        }
+
+        .timeline-event.critical {
+            background: rgba(26, 0, 0, 0.8);
+            border-left-color: #ff0000;
+        }
+
+        .timeline-event.critical::before {
+            background: #ff0000;
+            animation: pulse-critical 1.5s infinite;
+        }
+
+        @keyframes pulse-critical {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(255, 0, 0, 1);
+            }
+        }
+
+        .time-badge {
+            display: inline-block;
+            background: #ff4444;
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .search-history-panel {
+            background: #000;
+            border: 2px solid #ff4444;
+            padding: 30px;
+            margin: 40px 0;
+            border-radius: 8px;
+        }
+
+        .browser-window {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .browser-header {
+            background: #2a2a2a;
+            padding: 12px 15px;
+            border-bottom: 1px solid #444;
+            display: flex;
+            align-items: center;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #555;
+        }
+
+        .url-bar {
+            flex: 1;
+            background: #0d0d0d;
+            padding: 8px 15px;
+            border-radius: 4px;
+            color: #888;
+            font-size: 12px;
+        }
+
+        .search-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #2a2a2a;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-item:hover {
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .search-item.selected {
+            background: rgba(255, 68, 68, 0.2);
+            border-left: 4px solid #ff4444;
+        }
+
+        .search-query {
+            color: #4a9eff;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .search-timestamp {
+            color: #ffaa00;
+            font-size: 11px;
+        }
+
+        .task-panel {
+            background: linear-gradient(135deg, #1a0000, #0a0a0a);
+            border: 2px solid #ff4444;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .sequence-builder {
+            background: #0d0d0d;
+            padding: 25px;
+            margin: 20px 0;
+            border: 2px dashed #ff4444;
+            min-height: 200px;
+        }
+
+        .sequence-slot {
+            display: inline-block;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            padding: 12px 20px;
+            margin: 8px;
+            min-width: 120px;
+            text-align: center;
+            border-radius: 4px;
+            color: #888;
+        }
+
+        .sequence-slot.filled {
+            background: rgba(255, 68, 68, 0.2);
+            border-color: #ff4444;
+            color: #ff8888;
+        }
+
+        .btn {
+            background: #ff4444;
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: #ff6666;
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .evidence-correlation {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .evidence-card {
+            background: #0d0d0d;
+            border: 2px solid #333;
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .evidence-card.critical {
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="color: #ff8888; margin-bottom: 10px;">✓ FINGERPRINT MATCH CONFIRMED: KUNAL VERMA</div>
+            <h1 style="color: #ff4444;">DIGITAL TIMELINE RECONSTRUCTION</h1>
+            <p style="color: #888; margin-top: 10px;">Cross-referencing physical and digital evidence</p>
+        </div>
+
+        <div class="progress-indicator">
+            <div class="progress-step complete">
+                <div style="font-size: 24px;">✓</div>
+                <div style="font-size: 11px; margin-top: 5px;">VOICE ANALYSIS</div>
+            </div>
+            <div class="progress-step complete">
+                <div style="font-size: 24px;">✓</div>
+                <div style="font-size: 11px; margin-top: 5px;">FINGERPRINT MATCH</div>
+            </div>
+            <div class="progress-step active">
+                <div style="font-size: 24px;">⚡</div>
+                <div style="font-size: 11px; margin-top: 5px;">TIMELINE ANALYSIS</div>
+            </div>
+            <div class="progress-step">
+                <div style="font-size: 24px;">🎯</div>
+                <div style="font-size: 11px; margin-top: 5px;">FINAL VERDICT</div>
+            </div>
+        </div>
+
+        <div style="background: rgba(255, 170, 0, 0.1); border-left: 4px solid #ffaa00; padding: 20px; margin: 30px 0;">
+            <strong style="color: #ffaa00;">CRITICAL DISCOVERY:</strong>
+            <p style="color: #ccc; margin-top: 10px; line-height: 1.8;">
+                Kunal's laptop was seized and forensically imaged. Browser history reveals a series of suspicious searches 
+                made AFTER Dr. Goyal's death. The timing and content suggest consciousness of guilt.
+            </p>
+        </div>
+
+        <div class="timeline-container">
+            <div class="timeline-line"></div>
+
+            <div class="timeline-event">
+                <div class="time-badge">12:41 AM</div>
+                <div style="color: #ccc;">
+                    <strong>Initial Argument</strong><br>
+                    Door camera captures heated confrontation between Kunal and Dr. Goyal. 
+                    Raised voices, aggressive gestures recorded. Duration: ~8 minutes.
+                </div>
+            </div>
+
+            <div class="timeline-event">
+                <div class="time-badge">12:58 AM</div>
+                <div style="color: #ccc;">
+                    <strong>Desperate Phone Call</strong><br>
+                    Kunal calls Dr. Goyal. Voice analysis confirms extreme stress, multiple deception markers. 
+                    Final words: "I can't lose this opportunity. Please!"
+                </div>
+            </div>
+
+            <div class="timeline-event">
+                <div class="time-badge">01:03 AM</div>
+                <div style="color: #ccc;">
+                    <strong>Exits Residence</strong><br>
+                    CCTV shows Kunal leaving via side entrance (avoiding main camera). 
+                    Fingerprints on mug indicate he was present moments before.
+                </div>
+            </div>
+
+            <div class="timeline-event critical">
+                <div class="time-badge" style="background: #ff0000;">01:06 AM</div>
+                <div style="color: #ff8888;">
+                    <strong>DR. GOYAL'S PANIC SPIKE</strong><br>
+                    Smartwatch records sudden heart rate increase: 67 BPM → 145 BPM in 8 seconds. 
+                    Movement ceased at 01:07:23 AM. Medical examiner confirms: time of death.
+                </div>
+            </div>
+
+            <div class="timeline-event">
+                <div class="time-badge">01:09 AM</div>
+                <div style="color: #ccc;">
+                    <strong>Kunal's Device Connects to Dorm WiFi</strong><br>
+                    Location confirmed: His room, 2 floors above Dr. Goyal's residence. 
+                    Browser history begins logging searches...
+                </div>
+            </div>
+        </div>
+
+        <div class="search-history-panel">
+            <h2 style="color: #ff4444; margin-bottom: 20px;">🔍 BROWSER FORENSICS: KUNAL'S SEARCH HISTORY</h2>
+            
+            <div class="browser-window">
+                <div class="browser-header">
+                    <div class="browser-dots">
+                        <div class="dot" style="background: #ff6b6b;"></div>
+                        <div class="dot" style="background: #ffaa00;"></div>
+                        <div class="dot" style="background: #00ff88;"></div>
+                    </div>
+                    <div class="url-bar">chrome://history - Recovered from laptop forensic image</div>
+                </div>
+
+                <div class="search-item" onclick="selectSearch(1)" id="search1">
+                    <div class="search-query">"sudden cardiac arrest symptoms"</div>
+                    <div class="search-timestamp">⏰ 01:09:17 AM | Site: WebMD</div>
+                </div>
+
+                <div class="search-item" onclick="selectSearch(2)" id="search2">
+                    <div class="search-query">"how to delete call logs android"</div>
+                    <div class="search-timestamp">⏰ 01:11:34 AM | Site: Reddit r/Android</div>
+                </div>
+
+                <div class="search-item" onclick="selectSearch(3)" id="search3">
+                    <div class="search-query">"can police recover deleted text messages"</div>
+                    <div class="search-timestamp">⏰ 01:14:52 AM | Site: LegalAdvice forums</div>
+                </div>
+
+                <div class="search-item" onclick="selectSearch(4)" id="search4">
+                    <div class="search-query">"thesis committee replacement process"</div>
+                    <div class="search-timestamp">⏰ 01:18:09 AM | Site: University portal</div>
+                </div>
+
+                <div class="search-item" onclick="selectSearch(5)" id="search5">
+                    <div class="search-query">"fingerprint evidence inadmissible"</div>
+                    <div class="search-timestamp">⏰ 01:23:41 AM | Site: Criminal law blog</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="task-panel">
+            <h2 style="color: #ff8888; margin-bottom: 20px;">🧩 TASK 3: IDENTIFY THE SEQUENCE OF GUILT</h2>
+            <p style="color: #ccc; line-height: 1.8; margin-bottom: 20px;">
+                The search history reveals a psychological progression. Arrange the searches in chronological order 
+                to understand Kunal's state of mind AFTER Dr. Goyal's death. The sequence tells a story of 
+                panic, realization, and attempted cover-up.
+            </p>
+
+            <div style="background: rgba(255, 170, 0, 0.1); border: 2px solid #ffaa00; padding: 20px; margin: 20px 0;">
+                <strong style="color: #ffaa00;">BEHAVIORAL ANALYSIS FRAMEWORK:</strong>
+                <p style="color: #888; font-size: 13px; margin-top: 10px; line-height: 1.6;">
+                    Post-crime behavior typically follows a pattern:<br>
+                    1. <strong>Shock/Verification</strong> - Confirming what happened<br>
+                    2. <strong>Evidence Awareness</strong> - Realizing what was left behind<br>
+                    3. <strong>Cover-up Attempts</strong> - Trying to erase traces<br>
+                    4. <strong>Legal Concerns</strong> - Worrying about consequences<br>
+                    5. <strong>Moving Forward</strong> - Planning next steps
+                </p>
+            </div>
+
+            <div class="sequence-builder">
+                <div style="color: #ff8888; margin-bottom: 15px;">CLICK SEARCHES IN CHRONOLOGICAL ORDER:</div>
+                <div id="sequenceDisplay">
+                    <div class="sequence-slot">1. [EMPTY]</div>
+                    <div class="sequence-slot">2. [EMPTY]</div>
+                    <div class="sequence-slot">3. [EMPTY]</div>
+                    <div class="sequence-slot">4. [EMPTY]</div>
+                    <div class="sequence-slot">5. [EMPTY]</div>
+                </div>
+            </div>
+
+            <button class="btn" id="verifyBtn" onclick="verifySequence()" disabled>ANALYZE BEHAVIORAL PATTERN</button>
+            <button class="btn" style="background: #666; margin-left: 10px;" onclick="resetSequence()">RESET</button>
+            <div id="result" style="margin-top: 20px; display: none;"></div>
+        </div>
+
+        <div class="evidence-correlation">
+            <div class="evidence-card critical">
+                <h3 style="color: #ff4444; margin-bottom: 15px;">⏱️ TIMING ANALYSIS</h3>
+                <div style="color: #ccc; line-height: 2; font-size: 13px;">
+                    Death occurred: 01:07 AM<br>
+                    First search: 01:09 AM (2 minutes later)<br>
+                    Pattern: Immediate panic response<br>
+                    Significance: Suggests prior knowledge
+                </div>
+            </div>
+
+            <div class="evidence-card critical">
+                <h3 style="color: #ff4444; margin-bottom: 15px;">🧠 PSYCHOLOGICAL PROFILE</h3>
+                <div style="color: #ccc; line-height: 2; font-size: 13px;">
+                    Emotional state: Panic/Desperation<br>
+                    Search focus: Evidence + Legal consequences<br>
+                    Pattern: Consciousness of guilt<br>
+                    Behavior: Cover-up attempt
+                </div>
+            </div>
+
+            <div class="evidence-card critical">
+                <h3 style="color: #ff4444; margin-bottom: 15px;">🔬 PHYSICAL EVIDENCE</h3>
+                <div style="color: #ccc; line-height: 2; font-size: 13px;">
+                    Fingerprints: On victim's mug<br>
+                    Kitchen access: 00:51 AM (card log)<br>
+                    Voice stress: 73% deception<br>
+                    Timeline gap: 3 minutes (suspicious)
+                </div>
+            </div>
+
+            <div class="evidence-card critical">
+                <h3 style="color: #ff4444; margin-bottom: 15px;">📊 MOTIVE CONFIRMATION</h3>
+                <div style="color: #ccc; line-height: 2; font-size: 13px;">
+                    Threat: Career destruction<br>
+                    Opportunity: Physical access<br>
+                    Capability: Lab knowledge<br>
+                    Evidence: Overwhelming
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedSearches = [];
+        const correctSequence = [1, 2, 3, 5, 4]; // cardiac → delete logs → recover texts → fingerprints → thesis
+
+        function selectSearch(num) {
+            const searchItem = document.getElementById(`search${num}`);
+            
+            if (searchItem.classList.contains('selected')) {
+                // Deselect
+                searchItem.classList.remove('selected');
+                selectedSearches = selectedSearches.filter(s => s !== num);
+            } else if (selectedSearches.length < 5) {
+                // Select
+                searchItem.classList.add('selected');
+                selectedSearches.push(num);
+            }
+            
+            updateSequenceDisplay();
+            document.getElementById('verifyBtn').disabled = selectedSearches.length !== 5;
+        }
+
+        function updateSequenceDisplay() {
+            const slots = document.querySelectorAll('.sequence-slot');
+            const searchTexts = {
+                1: "cardiac arrest symptoms",
+                2: "delete call logs",
+                3: "recover deleted texts",
+                4: "thesis replacement",
+                5: "fingerprint evidence"
+            };
+            
+            selectedSearches.forEach((searchNum, index) => {
+                slots[index].textContent = `${index + 1}. ${searchTexts[searchNum]}`;
+                slots[index].classList.add('filled');
+            });
+            
+            // Clear remaining slots
+            for (let i = selectedSearches.length; i < 5; i++) {
+                slots[i].textContent = `${i + 1}. [EMPTY]`;
+                slots[i].classList.remove('filled');
+            }
+        }
+
+        function resetSequence() {
+            selectedSearches = [];
+            document.querySelectorAll('.search-item').forEach(item => item.classList.remove('selected'));
+            updateSequenceDisplay();
+            document.getElementById('verifyBtn').disabled = true;
+            document.getElementById('result').style.display = 'none';
+        }
+
+        function verifySequence() {
+            const isCorrect = JSON.stringify(selectedSearches) === JSON.stringify(correctSequence);
+            const resultDiv = document.getElementById('result');
+            
+            if (isCorrect) {
+                resultDiv.innerHTML = `
+                    <div style="background: rgba(255, 68, 68, 0.2); border: 2px solid #ff4444; padding: 25px; border-radius: 8px;">
+                        <div style="color: #ff8888; font-size: 20px; margin-bottom: 15px;">✓ BEHAVIORAL PATTERN CONFIRMED</div>
+                        <p style="color: #ccc; line-height: 2;">
+                            <strong>Psychological Timeline:</strong><br><br>
+                            
+                            1. <strong>"cardiac arrest symptoms"</strong> (01:09 AM)<br>
+                            → Verification phase: Confirming death mechanism<br><br>
+                            
+                            2. <strong>"delete call logs"</strong> (01:11 AM)<br>
+                            → Cover-up begins: Erasing communication evidence<br><br>
+                            
+                            3. <strong>"recover deleted texts"</strong> (01:14 AM)<br>
+                            → Panic escalates: Worried about forensic recovery<br><br>
+                            
+                            4. <strong>"fingerprint evidence"</strong> (01:23 AM)<br>
+                            → Physical evidence awareness: Realizes he touched the mug<br><br>
+                            
+                            5. <strong>"thesis replacement"</strong> (01:18 AM)<br>
+                            → Moving forward: Already planning life without mentor<br><br>
+                            
+                            <strong style="color: #ffaa00;">FORENSIC CONCLUSION:</strong><br>
+                            Search pattern demonstrates consciousness of guilt. Subject knew about death before 
+                            it was reported, attempted to destroy evidence, and immediately began planning next steps.
+                            Pattern consistent with perpetrator, not innocent witness.<br><br>
+                            
+                            <span style="color: #ff4444;">Compiling final evidence report...</span>
+                        </p>
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    window.location.href = 'final.html';
+                }, 6000);
+            } else {
+                resultDiv.innerHTML = `
+                    <div style="background: rgba(100, 100, 100, 0.2); border: 2px solid #666; padding: 20px; border-radius: 8px;">
+                        <div style="color: #888; font-size: 18px;">✗ SEQUENCE INCORRECT</div>
+                        <p style="color: #888; margin-top: 10px;">
+                            The chronological order doesn't match the timestamps. Review the search times and behavioral framework.
+                        </p>
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

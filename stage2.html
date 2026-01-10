@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FINGERPRINT FORENSICS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #1a0000, #0a0a0a);
+            border: 3px solid #ff4444;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            padding: 20px;
+            background: #0d0d0d;
+            border: 1px solid #333;
+        }
+
+        .progress-step {
+            text-align: center;
+            flex: 1;
+            padding: 10px;
+            border-right: 1px solid #333;
+            opacity: 0.5;
+        }
+
+        .progress-step:last-child {
+            border-right: none;
+        }
+
+        .progress-step.active {
+            opacity: 1;
+            color: #ff8888;
+        }
+
+        .progress-step.complete {
+            opacity: 1;
+            color: #ff4444;
+        }
+
+        .evidence-display {
+            background: #000;
+            border: 2px solid #ff4444;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .mug-container {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            margin: 30px auto;
+            background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+            border: 3px solid #333;
+            position: relative;
+            border-radius: 10px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .mug-outline {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: #2a2a2a;
+            border-radius: 50%;
+            border: 5px solid #444;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .mug-handle {
+            position: absolute;
+            right: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 150px;
+            border: 5px solid #444;
+            border-left: none;
+            border-radius: 0 50px 50px 0;
+            background: transparent;
+        }
+
+        .fingerprint-mark {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            background: radial-gradient(ellipse, rgba(255, 68, 68, 0.3), transparent);
+            border: 2px solid #ff4444;
+            border-radius: 45% 45% 45% 45%;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: pulse-print 2s infinite;
+        }
+
+        @keyframes pulse-print {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 68, 68, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(255, 68, 68, 0.8); }
+        }
+
+        .fingerprint-mark:hover {
+            transform: scale(1.1);
+            background: radial-gradient(ellipse, rgba(255, 68, 68, 0.5), transparent);
+        }
+
+        .fingerprint-mark.analyzed {
+            border-color: #00ff41;
+            background: radial-gradient(ellipse, rgba(0, 255, 65, 0.3), transparent);
+            animation: none;
+        }
+
+        #print1 { top: 30%; left: 40%; transform: rotate(-15deg); }
+        #print2 { top: 45%; left: 60%; transform: rotate(25deg); }
+        #print3 { right: 10px; top: 35%; transform: rotate(-30deg); }
+
+        .analysis-panel {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .print-comparison {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .print-sample {
+            background: #0d0d0d;
+            border: 2px solid #333;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .print-sample:hover {
+            border-color: #ff4444;
+            transform: translateY(-5px);
+        }
+
+        .print-sample.selected {
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .print-image {
+            width: 120px;
+            height: 150px;
+            margin: 0 auto 15px;
+            background: #000;
+            border: 2px solid #444;
+            border-radius: 45% 45% 45% 45%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .print-ridges {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    #666 2px,
+                    #666 3px
+                );
+            transform: rotate(var(--ridge-angle, 0deg));
+        }
+
+        .match-indicator {
+            font-size: 14px;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background: #ff4444;
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: #ff6666;
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metadata-item {
+            background: #0d0d0d;
+            padding: 15px;
+            border-left: 3px solid #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="color: #ff8888; margin-bottom: 10px;">✓ VOICE STRESS ANALYSIS COMPLETE</div>
+            <h1 style="color: #ff4444;">FINGERPRINT FORENSICS</h1>
+            <p style="color: #888; margin-top: 10px;">Evidence Item #47: Dr. Goyal's Coffee Mug</p>
+        </div>
+
+        <div class="progress-indicator">
+            <div class="progress-step complete">
+                <div style="font-size: 24px;">✓</div>
+                <div style="font-size: 11px; margin-top: 5px;">VOICE ANALYSIS</div>
+            </div>
+            <div class="progress-step active">
+                <div style="font-size: 24px;">⚡</div>
+                <div style="font-size: 11px; margin-top: 5px;">FINGERPRINT MATCH</div>
+            </div>
+            <div class="progress-step">
+                <div style="font-size: 24px;">📊</div>
+                <div style="font-size: 11px; margin-top: 5px;">TIMELINE ANALYSIS</div>
+            </div>
+            <div class="progress-step">
+                <div style="font-size: 24px;">🎯</div>
+                <div style="font-size: 11px; margin-top: 5px;">FINAL VERDICT</div>
+            </div>
+        </div>
+
+        <div class="evidence-display">
+            <h2 style="color: #ff4444; margin-bottom: 20px;">🔬 PHYSICAL EVIDENCE ANALYSIS</h2>
+            
+            <div style="background: #0d0d0d; padding: 20px; margin-bottom: 30px; border-left: 3px solid #ffaa00;">
+                <strong style="color: #ffaa00;">EVIDENCE LOG:</strong><br>
+                <span style="color: #888; font-size: 13px; line-height: 1.8;">
+                Item: Coffee mug recovered from Dr. Goyal's desk<br>
+                Location: Faculty residence, desk surface<br>
+                Contents: Cold coffee (untouched for ~2 hours)<br>
+                Dusting method: Magnetic powder + UV light<br>
+                Prints detected: 3 distinct patterns (labeled A, B, C)
+                </span>
+            </div>
+
+            <div class="mug-container">
+                <div class="mug-outline">
+                    <div class="fingerprint-mark" id="print1" onclick="analyzePrint(1)"></div>
+                    <div class="fingerprint-mark" id="print2" onclick="analyzePrint(2)"></div>
+                    <div class="mug-handle">
+                        <div class="fingerprint-mark" id="print3" onclick="analyzePrint(3)"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="printAnalysis" style="background: #1a1a1a; padding: 25px; margin: 20px 0; display: none; border: 2px solid #ff4444;">
+                <h3 style="color: #ff8888; margin-bottom: 15px;">PRINT ANALYSIS RESULTS</h3>
+                <div class="metadata-grid">
+                    <div class="metadata-item">
+                        <strong style="color: #ffaa00;">Print A (Rim):</strong><br>
+                        <span style="color: #888; font-size: 13px;">
+                        Match: Dr. Goyal (Expected)<br>
+                        Quality: Excellent<br>
+                        Age: ~2-3 hours old
+                        </span>
+                    </div>
+                    <div class="metadata-item">
+                        <strong style="color: #ffaa00;">Print B (Handle):</strong><br>
+                        <span style="color: #888; font-size: 13px;">
+                        Match: PARTIAL (Smudged)<br>
+                        Quality: Poor<br>
+                        Age: Undetermined
+                        </span>
+                    </div>
+                    <div class="metadata-item" style="grid-column: 1 / -1; border-left-color: #ff4444;">
+                        <strong style="color: #ff4444;">Print C (Handle + Rim):</strong><br>
+                        <span style="color: #ccc; font-size: 13px;">
+                        Match: KUNAL VERMA<br>
+                        Quality: Excellent (multiple contact points)<br>
+                        Age: Fresh (~1 hour old)<br>
+                        <span style="color: #ff4444;">⚠ SUSPECT MATCH CONFIRMED</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="analysis-panel">
+            <h2 style="color: #ff8888; margin-bottom: 20px;">🔍 TASK 2: MATCH THE FINGERPRINT PATTERN</h2>
+            <p style="color: #ccc; line-height: 1.8; margin-bottom: 20px;">
+                A clear fingerprint was recovered from both the mug's handle and rim. The database shows three potential matches 
+                from people with recent access to Dr. Goyal's residence. Compare the ridge patterns and minutiae points to 
+                identify the correct match.
+            </p>
+
+            <div style="background: rgba(255, 170, 0, 0.1); border: 2px solid #ffaa00; padding: 20px; margin: 20px 0;">
+                <strong style="color: #ffaa00;">FORENSIC HINT:</strong>
+                <p style="color: #888; font-size: 13px; margin-top: 10px;">
+                    Fingerprints are classified by ridge patterns. Key features:<br>
+                    • <strong>Loop</strong>: Ridges enter and exit on same side (60-65% of population)<br>
+                    • <strong>Whorl</strong>: Circular or spiral pattern (30-35% of population)<br>
+                    • <strong>Arch</strong>: Ridges rise in center (5% of population)<br><br>
+                    The recovered print shows a <strong>LOOP</strong> pattern with ridge angle ~25-30 degrees.
+                </p>
+            </div>
+
+            <div class="print-comparison">
+                <div class="print-sample" onclick="selectPrint(1)" id="sample1">
+                    <div class="print-image">
+                        <div class="print-ridges" style="--ridge-angle: 45deg;"></div>
+                    </div>
+                    <strong style="color: #ccc;">CANDIDATE A</strong>
+                    <div style="font-size: 12px; color: #888; margin-top: 10px;">
+                        Name: Dr. Goyal<br>
+                        Pattern: Whorl<br>
+                        Angle: 45°
+                    </div>
+                </div>
+
+                <div class="print-sample" onclick="selectPrint(2)" id="sample2">
+                    <div class="print-image">
+                        <div class="print-ridges" style="--ridge-angle: 28deg;"></div>
+                    </div>
+                    <strong style="color: #ccc;">CANDIDATE B</strong>
+                    <div style="font-size: 12px; color: #888; margin-top: 10px;">
+                        Name: Kunal Verma<br>
+                        Pattern: Loop<br>
+                        Angle: 28°
+                    </div>
+                </div>
+
+                <div class="print-sample" onclick="selectPrint(3)" id="sample3">
+                    <div class="print-image">
+                        <div class="print-ridges" style="--ridge-angle: 5deg;"></div>
+                    </div>
+                    <strong style="color: #ccc;">CANDIDATE C</strong>
+                    <div style="font-size: 12px; color: #888; margin-top: 10px;">
+                        Name: Unknown Staff<br>
+                        Pattern: Arch<br>
+                        Angle: 5°
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" id="verifyBtn" onclick="verifyMatch()" disabled>CONFIRM FINGERPRINT MATCH</button>
+            <div id="result" style="margin-top: 20px; display: none;"></div>
+        </div>
+
+        <div style="background: #0d0d0d; padding: 20px; border: 1px solid #333; margin-top: 30px;">
+            <h3 style="color: #ff4444; margin-bottom: 10px;">PRELIMINARY FINDINGS:</h3>
+            <p style="color: #888; font-size: 13px; line-height: 1.8;">
+                → Multiple fingerprints indicate physical contact with victim's mug<br>
+                → Fresh prints suggest recent handling (within critical time window)<br>
+                → Handle + rim contact indicates drinking or pouring action<br>
+                → No defensive wipe marks (suggests familiarity/trust)<br>
+                → Combined with voice analysis: Pattern of access and motive emerging
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let analyzedPrints = 0;
+        let selectedCandidate = null;
+
+        function analyzePrint(printNum) {
+            const print = document.getElementById(`print${printNum}`);
+            if (!print.classList.contains('analyzed')) {
+                print.classList.add('analyzed');
+                analyzedPrints++;
+                
+                if (analyzedPrints === 3) {
+                    document.getElementById('printAnalysis').style.display = 'block';
+                }
+            }
+        }
+
+        function selectPrint(num) {
+            // Remove previous selection
+            document.querySelectorAll('.print-sample').forEach(s => s.classList.remove('selected'));
+            
+            // Select new
+            document.getElementById(`sample${num}`).classList.add('selected');
+            selectedCandidate = num;
+            
+            document.getElementById('verifyBtn').disabled = false;
+        }
+
+        function verifyMatch() {
+            const resultDiv = document.getElementById('result');
+            
+            if (selectedCandidate === 2) {
+                resultDiv.innerHTML = `
+                    <div style="background: rgba(255, 68, 68, 0.2); border: 2px solid #ff4444; padding: 25px; border-radius: 8px;">
+                        <div style="color: #ff8888; font-size: 20px; margin-bottom: 15px;">✓ FINGERPRINT MATCH CONFIRMED</div>
+                        <p style="color: #ccc; line-height: 2;">
+                            <strong>Match: KUNAL VERMA (98.7% confidence)</strong><br><br>
+                            
+                            Ridge pattern: Loop (28° angle)<br>
+                            Minutiae points: 14/14 matched<br>
+                            Quality score: Excellent<br><br>
+                            
+                            <strong style="color: #ffaa00;">CRITICAL FINDINGS:</strong><br>
+                            • Fingerprints found on BOTH handle and rim of mug<br>
+                            • Indicates direct contact with victim's beverage<br>
+                            • Print age: ~1 hour old (places Kunal at scene around 00:50-01:00 AM)<br>
+                            • No signs of wiping or concealment attempt<br><br>
+                            
+                            <strong style="color: #ff4444;">TIMELINE CORRELATION:</strong><br>
+                            Voice call ended: 12:58 AM<br>
+                            Estimated print time: 01:00 AM<br>
+                            Dr. Goyal's death: 01:07 AM<br><br>
+                            
+                            <span style="color: #ff4444;">Proceeding to timeline reconstruction...</span>
+                        </p>
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    window.location.href = 'stage3.html';
+                }, 5000);
+            } else {
+                resultDiv.innerHTML = `
+                    <div style="background: rgba(100, 100, 100, 0.2); border: 2px solid #666; padding: 20px; border-radius: 8px;">
+                        <div style="color: #888; font-size: 18px;">✗ PATTERN MISMATCH</div>
+                        <p style="color: #888; margin-top: 10px;">
+                            Ridge pattern doesn't match the recovered print. Review the loop angle and try again.
+                        </p>
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CASE CONCLUSION - KUNAL VERMA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+        }
+
+        .analysis-screen {
+            padding: 60px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .fade-in {
+            animation: fadeIn 2s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .progress-bar-final {
+            width: 100%;
+            height: 40px;
+            background: #1a1a1a;
+            border: 2px solid #ff4444;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill-final {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4444, #ff6666);
+            width: 0%;
+            animation: fillToComplete 4s forwards;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+        }
+
+        @keyframes fillToComplete {
+            to { width: 100%; }
+        }
+
+        .evidence-compilation {
+            background: linear-gradient(135deg, #1a0a0a, #0a0a0a);
+            border: 3px solid #ff4444;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 0 40px rgba(255, 68, 68, 0.3);
+        }
+
+        .evidence-item {
+            background: rgba(255, 68, 68, 0.05);
+            border-left: 4px solid #ff4444;
+            padding: 20px;
+            margin: 20px 0;
+            opacity: 0;
+            animation: slideIn 0.5s forwards;
+        }
+
+        .evidence-item:nth-child(1) { animation-delay: 0.5s; }
+        .evidence-item:nth-child(2) { animation-delay: 1s; }
+        .evidence-item:nth-child(3) { animation-delay: 1.5s; }
+        .evidence-item:nth-child(4) { animation-delay: 2s; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .processing {
+            text-align: center;
+            padding: 60px;
+            font-size: 24px;
+            color: #ff8888;
+            opacity: 0;
+            animation: fadeIn 1s 2.5s forwards;
+        }
+
+        .dots {
+            display: inline-block;
+        }
+
+        .dots span {
+            animation: blink 1.4s infinite;
+        }
+
+        .dots span:nth-child(2) { animation-delay: 0.2s; }
+        .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .case-header {
+            background: linear-gradient(90deg, #1a0000, #0a0a0a);
+            border-bottom: 3px solid #ff4444;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .case-header h1 {
+            color: #ff4444;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+        }
+
+        .verdict-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+
+        .verdict-box {
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .murderer-text {
+            font-size: 100px;
+            color: #ff0000;
+            font-weight: bold;
+            letter-spacing: 20px;
+            text-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
+            animation: glitch 0.5s infinite, pulse-red 2s infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 5px); }
+            40% { transform: translate(-5px, -5px); }
+            60% { transform: translate(5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes pulse-red {
+            0%, 100% {
+                text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+            }
+            50% {
+                text-shadow: 0 0 60px rgba(255, 0, 0, 1), 0 0 80px rgba(255, 0, 0, 0.6);
+            }
+        }
+
+        .suspect-photo {
+            width: 350px;
+            height: 350px;
+            margin: 40px auto;
+            border: 5px solid #ff0000;
+            background: #1a0000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+            animation: photo-reveal 1s;
+        }
+
+        @keyframes photo-reveal {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .case-closed {
+            font-size: 32px;
+            color: #ff4444;
+            margin-top: 40px;
+            letter-spacing: 10px;
+            animation: fadeIn 1s 2s forwards;
+            opacity: 0;
+        }
+
+        .final-summary {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid #ff0000;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: left;
+            animation: fadeIn 1s 3s forwards;
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            .murderer-text {
+                font-size: 60px;
+                letter-spacing: 10px;
+            }
+            .suspect-photo {
+                width: 250px;
+                height: 250px;
+                font-size: 60px;
+            }
+            .case-closed {
+                font-size: 24px;
+            }
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 60px;
+            margin: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #ff4444, #cc0000);
+        }
+
+        .timeline-event {
+            position: relative;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(26, 10, 10, 0.5);
+            border-left: 4px solid #ff4444;
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        .timeline-event::before {
+            content: '';
+            position: absolute;
+            left: -64px;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background: #ff4444;
+            border: 4px solid #0a0a0a;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 68, 68, 0.8);
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .timeline-time {
+            color: #ff4444;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content {
+            color: #ccc;
+            line-height: 1.8;
+        }
+
+        .evidence-card {
+            background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+            border: 2px solid #ff4444;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.2);
+        }
+
+        .evidence-card h3 {
+            color: #ff4444;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .bio-data {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .bio-item {
+            background: #0a0a0a;
+            padding: 15px;
+            border-left: 3px solid #ff4444;
+        }
+
+        .bio-label {
+            color: #888;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .bio-value {
+            color: #e0e0e0;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .smartwatch-data {
+            background: #000;
+            border: 2px solid #ff4444;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .heartrate-graph {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(to bottom, rgba(255, 68, 68, 0.1), transparent);
+            position: relative;
+            border: 1px solid #333;
+            margin: 20px 0;
+        }
+
+        .spike-indicator {
+            position: absolute;
+            top: 10%;
+            left: 75%;
+            width: 4px;
+            height: 80%;
+            background: linear-gradient(to top, #ff0000, #ff4444);
+            animation: pulse-spike 1s infinite;
+        }
+
+        @keyframes pulse-spike {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 20px #ff0000;
+            }
+            50% {
+                opacity: 0.7;
+                box-shadow: 0 0 40px #ff0000;
+            }
+        }
+
+        .spike-label {
+            position: absolute;
+            top: 5%;
+            left: 77%;
+            background: #ff0000;
+            color: #fff;
+            padding: 5px 10px;
+            font-size: 11px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .voice-analysis {
+            background: #0a0a0a;
+            border: 1px solid #ff4444;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .voice-wave {
+            height: 60px;
+            background: #000;
+            border-radius: 4px;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wave-bar {
+            position: absolute;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to top, #ff4444, #ff8888);
+            animation: wave 2s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { height: 30%; }
+            50% { height: 80%; }
+        }
+
+        .stress-indicator {
+            background: rgba(255, 68, 68, 0.1);
+            border-left: 4px solid #ff0000;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+
+        .psychological-profile {
+            background: linear-gradient(135deg, #1a0a0a, #0a0a0a);
+            border: 2px solid #ff6b6b;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .profile-trait {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        .trait-bar {
+            width: 60%;
+            height: 20px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .trait-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4444, #cc0000);
+            transition: width 2s ease-out;
+        }
+
+        .contradiction-box {
+            background: #1a0000;
+            border: 2px dashed #ff4444;
+            padding: 20px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .contradiction-box::before {
+            content: '⚠ BEHAVIORAL INCONSISTENCY';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #0a0a0a;
+            padding: 0 10px;
+            color: #ff4444;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .final-verdict {
+            background: linear-gradient(135deg, #1a0000, #000);
+            border: 3px solid #ff0000;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.3);
+            animation: verdict-pulse 3s infinite;
+        }
+
+        @keyframes verdict-pulse {
+            0%, 100% {
+                box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 60px rgba(255, 0, 0, 0.6);
+            }
+        }
+
+        .motive-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .motive-card {
+            background: rgba(26, 10, 10, 0.7);
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #ff4444;
+            border-radius: 4px;
+        }
+
+        .motive-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .trap-reveal {
+            background: #0a0a0a;
+            border: 2px dashed #666;
+            padding: 35px;
+            margin: 40px 0;
+            text-align: center;
+            opacity: 0;
+            animation: fadeInSlow 1s 4s forwards;
+        }
+
+        @keyframes fadeInSlow {
+            to { opacity: 1; }
+        }
+
+        .glitch-text {
+            animation: glitch 0.5s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="analysis-screen fade-in" id="analysisScreen">
+        <h1 style="text-align: center; color: #ff8888; font-size: 36px; margin-bottom: 40px;">
+            FORENSIC ANALYSIS COMPLETE
+        </h1>
+
+        <div class="progress-bar-final">
+            <div class="progress-fill-final">COMPILING EVIDENCE...</div>
+        </div>
+
+        <div class="evidence-compilation">
+            <h2 style="color: #ff4444; margin-bottom: 30px; text-align: center;">
+                EVIDENCE SUMMARY
+            </h2>
+
+            <div class="evidence-item">
+                <strong style="color: #ff8888; font-size: 18px;">✓ VOICE STRESS ANALYSIS</strong>
+                <p style="color: #ccc; margin-top: 10px; line-height: 1.8;">
+                    • Last phone call at 12:58 AM (4 min 17 sec duration)<br>
+                    • Voice tremors at critical timestamps: 1:47, 2:33, 3:42<br>
+                    • Deception markers: "desperate", "everything", "opportunity"<br>
+                    • Deception probability: 73% (above threshold)<br>
+                    • Emotional state: Extreme panic and career-related desperation
+                </p>
+            </div>
+
+            <div class="evidence-item">
+                <strong style="color: #ff8888; font-size: 18px;">✓ FINGERPRINT FORENSICS</strong>
+                <p style="color: #ccc; margin-top: 10px; line-height: 1.8;">
+                    • Fingerprints found on Dr. Goyal's coffee mug (handle + rim)<br>
+                    • Match: Kunal Verma (98.7% confidence)<br>
+                    • Pattern: Loop, 28° ridge angle<br>
+                    • Print age: ~1 hour old (placed at scene 01:00 AM)<br>
+                    • Indicates direct contact with victim's beverage
+                </p>
+            </div>
+
+            <div class="evidence-item">
+                <strong style="color: #ff8888; font-size: 18px;">✓ DIGITAL TIMELINE ANALYSIS</strong>
+                <p style="color: #ccc; margin-top: 10px; line-height: 1.8;">
+                    • Browser history shows immediate post-death searches (01:09 AM)<br>
+                    • Search sequence: cardiac arrest → delete logs → recover texts → fingerprints → thesis<br>
+                    • Pattern indicates consciousness of guilt<br>
+                    • Behavior: Attempted evidence destruction and cover-up<br>
+                    • Timeline: Knew about death before it was reported
+                </p>
+            </div>
+
+            <div class="evidence-item">
+                <strong style="color: #ff8888; font-size: 18px;">✓ PSYCHOLOGICAL PROFILE</strong>
+                <p style="color: #ccc; margin-top: 10px; line-height: 1.8;">
+                    • Emotional instability: 85%<br>
+                    • Career desperation: 92%<br>
+                    • Proximity/Opportunity: 95%<br>
+                    • Motive: Career destruction imminent due to credential revocation<br>
+                    • Method: Crime of passion turned panic
+                </p>
+            </div>
+        </div>
+
+        <div class="processing" id="processing">
+            ANALYZING BEHAVIORAL PATTERNS<span class="dots"><span>.</span><span>.</span><span>.</span></span>
+        </div>
+    </div>
+        <div class="evidence-card">
+            <h3>📋 SUBJECT PROFILE</h3>
+            <div class="bio-data">
+                <div class="bio-item">
+                    <div class="bio-label">FULL NAME</div>
+                    <div class="bio-value">Kunal Verma</div>
+                </div>
+                <div class="bio-item">
+                    <div class="bio-label">AGE</div>
+                    <div class="bio-value">24 years</div>
+                </div>
+                <div class="bio-item">
+                    <div class="bio-label">RELATIONSHIP</div>
+                    <div class="bio-value">Research Assistant / Roommate</div>
+                </div>
+                <div class="bio-item">
+                    <div class="bio-label">LAST CONTACT</div>
+                    <div class="bio-value" style="color: #ff4444;">12:58 AM (Last caller)</div>
+                </div>
+                <div class="bio-item">
+                    <div class="bio-label">PHYSICAL PROXIMITY</div>
+                    <div class="bio-value" style="color: #ff4444;">Same building, 2 floors apart</div>
+                </div>
+                <div class="bio-item">
+                    <div class="bio-label">ACCESS LEVEL</div>
+                    <div class="bio-value" style="color: #ff4444;">Requested temp credentials 3 days prior</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="evidence-card">
+            <h3>⏱️ CRITICAL TIMELINE</h3>
+            <div class="timeline">
+                <div class="timeline-event">
+                    <div class="timeline-time">12:41 AM</div>
+                    <div class="timeline-content">
+                        <strong>Initial argument begins.</strong> Kunal confronts Dr. Goyal about "pushing too hard" on access audits.
+                        Door camera shows raised voices, aggressive gestures.
+                    </div>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-time">12:47 AM</div>
+                    <div class="timeline-content">
+                        <strong>Dr. Goyal: "You're getting careless."</strong><br>
+                        <strong>Kunal: "You're getting paranoid."</strong><br>
+                        Smartwatch records elevated heart rate (92 BPM) - Kunal's typical stress response.
+                    </div>
+                </div>
+
+                <div class="timeline-event" style="border-left-color: #ff0000;">
+                    <div class="timeline-time">12:58 AM</div>
+                    <div class="timeline-content" style="color: #ff4444;">
+                        <strong>Phone call placed.</strong> Duration: 4 minutes 17 seconds.<br>
+                        Voice analysis indicates emotional distress, pleading tone.<br>
+                        Final words captured: <em>"I can't lose this opportunity. Please."</em>
+                    </div>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-time">01:03 AM</div>
+                    <div class="timeline-content">
+                        <strong>Kunal claims he left the residence.</strong><br>
+                        CCTV shows him exiting through side entrance (avoiding main camera).<br>
+                        Swipe log: Residence door accessed with his card.
+                    </div>
+                </div>
+
+                <div class="timeline-event" style="border-left-color: #ff0000; background: rgba(26, 0, 0, 0.8);">
+                    <div class="timeline-time">01:06 AM</div>
+                    <div class="timeline-content" style="color: #ff4444;">
+                        <strong>Dr. Goyal's smartwatch records PANIC SPIKE.</strong><br>
+                        Heart rate: 67 BPM → 145 BPM in 8 seconds<br>
+                        Movement ceased at 01:07:23 AM<br>
+                        <span style="font-size: 12px; color: #ff8888;">3 minutes after Kunal's claimed departure</span>
+                    </div>
+                </div>
+
+                <div class="timeline-event">
+                    <div class="timeline-time">01:09 AM</div>
+                    <div class="timeline-content">
+                        <strong>Kunal's phone connects to dorm WiFi.</strong><br>
+                        Location: His room (2 floors up).<br>
+                        First search query: <span class="glitch-text" style="color: #ff4444;">"sudden cardiac arrest symptoms"</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="smartwatch-data">
+            <h3 style="color: #ff4444; margin-bottom: 15px;">💓 DR. GOYAL'S SMARTWATCH DATA</h3>
+            <p style="color: #888; font-size: 12px; margin-bottom: 20px;">
+                Recovered from Apple Health sync • Last update: 01:07:23 AM
+            </p>
+            <div class="heartrate-graph">
+                <div class="spike-indicator"></div>
+                <div class="spike-label">PANIC SPIKE: 01:06:42 AM</div>
+                <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0;">
+                    <polyline
+                        fill="none"
+                        stroke="#ff4444"
+                        stroke-width="2"
+                        points="0,150 50,140 100,145 150,142 200,138 250,140 300,65 350,60 400,58 450,180 500,180 600,180 700,180"
+                        style="filter: drop-shadow(0 0 5px #ff4444);"
+                    />
+                </svg>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px;">
+                <div style="background: #1a1a1a; padding: 10px; text-align: center; border-left: 3px solid #00ff88;">
+                    <div style="color: #888; font-size: 11px;">BASELINE</div>
+                    <div style="color: #00ff88; font-size: 18px; font-weight: bold;">67 BPM</div>
+                </div>
+                <div style="background: #1a1a1a; padding: 10px; text-align: center; border-left: 3px solid #ffaa00;">
+                    <div style="color: #888; font-size: 11px;">ARGUMENT</div>
+                    <div style="color: #ffaa00; font-size: 18px; font-weight: bold;">89 BPM</div>
+                </div>
+                <div style="background: #1a1a1a; padding: 10px; text-align: center; border-left: 3px solid #ff4444;">
+                    <div style="color: #888; font-size: 11px;">PANIC</div>
+                    <div style="color: #ff4444; font-size: 18px; font-weight: bold;">145 BPM</div>
+                </div>
+                <div style="background: #1a1a1a; padding: 10px; text-align: center; border-left: 3px solid #ff0000;">
+                    <div style="color: #888; font-size: 11px;">FINAL</div>
+                    <div style="color: #ff0000; font-size: 18px; font-weight: bold;">0 BPM</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="voice-analysis">
+            <h3 style="color: #ff4444; margin-bottom: 15px;">🎙️ VOICE STRESS ANALYSIS</h3>
+            <p style="color: #888; font-size: 12px; margin-bottom: 15px;">
+                Call recording (12:58 AM) processed through VSA algorithm
+            </p>
+            <div class="voice-wave">
+                <div class="wave-bar" style="left: 5%; animation-delay: 0s;"></div>
+                <div class="wave-bar" style="left: 10%; animation-delay: 0.1s;"></div>
+                <div class="wave-bar" style="left: 15%; animation-delay: 0.2s;"></div>
+                <div class="wave-bar" style="left: 20%; animation-delay: 0.3s;"></div>
+                <div class="wave-bar" style="left: 25%; animation-delay: 0.4s; height: 70%;"></div>
+                <div class="wave-bar" style="left: 30%; animation-delay: 0.5s; height: 75%;"></div>
+                <div class="wave-bar" style="left: 35%; animation-delay: 0.6s; height: 80%;"></div>
+                <div class="wave-bar" style="left: 40%; animation-delay: 0.7s;"></div>
+                <div class="wave-bar" style="left: 45%; animation-delay: 0.8s;"></div>
+                <div class="wave-bar" style="left: 50%; animation-delay: 0.9s;"></div>
+                <div class="wave-bar" style="left: 55%; animation-delay: 1s;"></div>
+                <div class="wave-bar" style="left: 60%; animation-delay: 1.1s; height: 85%;"></div>
+                <div class="wave-bar" style="left: 65%; animation-delay: 1.2s; height: 90%;"></div>
+                <div class="wave-bar" style="left: 70%; animation-delay: 1.3s; height: 85%;"></div>
+                <div class="wave-bar" style="left: 75%; animation-delay: 1.4s;"></div>
+                <div class="wave-bar" style="left: 80%; animation-delay: 1.5s;"></div>
+                <div class="wave-bar" style="left: 85%; animation-delay: 1.6s;"></div>
+                <div class="wave-bar" style="left: 90%; animation-delay: 1.7s;"></div>
+                <div class="wave-bar" style="left: 95%; animation-delay: 1.8s;"></div>
+            </div>
+            <div class="stress-indicator">
+                <strong>DETECTED STRESS MARKERS:</strong><br>
+                ✓ Trembling voice at 1:47 mark<br>
+                ✓ Rapid breathing at 2:33 mark<br>
+                ✓ Voice crack during: "Everything I worked for"<br>
+                ✓ Deception probability: <span style="color: #ff4444; font-weight: bold;">73%</span>
+            </div>
+        </div>
+
+        <div class="psychological-profile">
+            <h3 style="color: #ff6b6b; margin-bottom: 20px; text-align: center;">🧠 PSYCHOLOGICAL THREAT ASSESSMENT</h3>
+            
+            <div class="profile-trait">
+                <span style="color: #ccc;">Emotional Instability</span>
+                <div class="trait-bar">
+                    <div class="trait-fill" style="width: 85%;"></div>
+                </div>
+                <span style="color: #ff4444; font-weight: bold;">85%</span>
+            </div>
+
+            <div class="profile-trait">
+                <span style="color: #ccc;">Career Desperation</span>
+                <div class="trait-bar">
+                    <div class="trait-fill" style="width: 92%;"></div>
+                </div>
+                <span style="color: #ff4444; font-weight: bold;">92%</span>
+            </div>
+
+            <div class="profile-trait">
+                <span style="color: #ccc;">Proximity/Opportunity</span>
+                <div class="trait-bar">
+                    <div class="trait-fill" style="width: 95%;"></div>
+                </div>
+                <span style="color: #ff4444; font-weight: bold;">95%</span>
+            </div>
+
+            <div class="profile-trait">
+                <span style="color: #ccc;">Deceptive Behavior</span>
+                <div class="trait-bar">
+                    <div class="trait-fill" style="width: 78%;"></div>
+                </div>
+                <span style="color: #ff4444; font-weight: bold;">78%</span>
+            </div>
+
+            <div class="profile-trait">
+                <span style="color: #ccc;">Technical Capability</span>
+                <div class="trait-bar">
+                    <div class="trait-fill" style="width: 88%;"></div>
+                </div>
+                <span style="color: #ff4444; font-weight: bold;">88%</span>
+            </div>
+        </div>
+
+        <div class="contradiction-box">
+            <p style="line-height: 1.8; color: #ff8888;">
+                <strong>STATEMENT:</strong> "When I left, he was fine. Angry, yes. Alive."<br><br>
+                
+                <strong>CONTRADICTION #1:</strong> CCTV shows Kunal exiting at 01:03 AM, yet Dr. Goyal's panic spike occurs at 01:06 AM - only 3 minutes later. Medical analysis suggests the toxin would need 15-20 minutes to take effect if administered during their argument.<br><br>
+                
+                <strong>CONTRADICTION #2:</strong> Kunal claims he "didn't want to leave things unresolved," yet phone data shows he searched "cardiac arrest symptoms" within 6 minutes of leaving.<br><br>
+                
+                <strong>CONTRADICTION #3:</strong> His emotional state during the call ("I can't lose this") directly contradicts his claim of leaving peacefully.
+            </p>
+        </div>
+
+        <div class="evidence-card">
+            <h3>🔬 TRACE EVIDENCE</h3>
+            <div style="background: #0a0a0a; padding: 20px; margin: 15px 0;">
+                <p style="margin-bottom: 15px; color: #ccc; line-height: 1.8;">
+                    <strong style="color: #ff4444;">Kitchen Access Log:</strong><br>
+                    00:51 AM - Card swipe: K-VERMA-2847<br>
+                    Item accessed: Refrigerator (energy drink storage)<br><br>
+                    
+                    <strong style="color: #ff4444;">Fingerprint Analysis:</strong><br>
+                    Dr. Goyal's coffee mug: 3 sets of prints<br>
+                    • Dr. Goyal (expected)<br>
+                    • Unidentified partial (smudged)<br>
+                    • <span style="color: #ff4444;">Kunal Verma (handle + rim)</span><br><br>
+                    
+                    <strong style="color: #ff4444;">Security Observation:</strong><br>
+                    Kunal avoided main entrance camera when leaving<br>
+                    Chose side exit with 47% camera blind spot coverage
+                </p>
+            </div>
+        </div>
+
+        <div class="final-verdict">
+            <h2 style="color: #ff0000; font-size: 28px; margin-bottom: 20px;">BEHAVIORAL PROFILE: KUNAL VERMA</h2>
+            
+            <div class="motive-grid">
+                <div class="motive-card">
+                    <div class="motive-icon">💔</div>
+                    <strong style="color: #ff4444;">MOTIVE</strong>
+                    <p style="font-size: 12px; color: #ccc; margin-top: 10px;">
+                        Career destruction imminent.<br>
+                        Credential access revoked.<br>
+                        Mentor relationship fractured.
+                    </p>
+                </div>
+                <div class="motive-card">
+                    <div class="motive-icon">⏱️</div>
+                    <strong style="color: #ff4444;">OPPORTUNITY</strong>
+                    <p style="font-size: 12px; color: #ccc; margin-top: 10px;">
+                        Physical proximity.<br>
+                        Kitchen access.<br>
+                        Last person with victim.
+                    </p>
+                </div>
+                <div class="motive-card">
+                    <div class="motive-icon">🔧</div>
+                    <strong style="color: #ff4444;">CAPABILITY</strong>
+                    <p style="font-size: 12px; color: #ccc; margin-top: 10px;">
+                        Lab access granted.<br>
+                        Knowledge of routines.<br>
+                        Technical competence.
+                    </p>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; padding: 25px; background: rgba(0, 0, 0, 0.5); border: 1px solid #ff4444; border-radius: 4px;">
+                <p style="font-size: 16px; line-height: 2; color: #ff8888;">
+                    <strong style="color: #ff0000;">COMPOSITE GUILT PROBABILITY:</strong> 87%<br><br>
+                    
+                    Kunal Verma had the motive (career preservation).<br>
+                    He had the means (lab access, proximity).<br>
+                    He had the opportunity (last contact, unsupervised access).<br>
+                    His behavior post-incident is consistent with guilty consciousness.<br><br>
+                    
+                    <span style="font-size: 14px; color: #ff4444;">
+                    The evidence suggests a crime of passion turned panic.<br>
+                    A desperate act by someone who had everything to lose.
+                    </span>
+                </p>
+            </div>
+        </div>
+
+        <div class="trap-reveal">
+            <h3 style="color: #666; margin-bottom: 20px;">BUT WAIT...</h3>
+            <p style="color: #888; line-height: 2; font-size: 13px;">
+                Everything fits.<br>
+                The timeline. The motive. The emotion.<br>
+                It's all <em>perfectly</em> circumstantial.<br><br>
+                
+                <span style="color: #ff4444;">Which is exactly the problem.</span><br><br>
+                
+                You chose <strong>THE LAST CALLER</strong>.<br>
+                But Dr. Goyal's riddle asked:<br>
+                <em>"Am I the killer, or just the last witness?"</em><br><br>
+                
+                <span style="color: #0ff; font-size: 12px;">
+                Kunal was emotional. Kunal was desperate.<br>
+                Kunal left a trail <strong>designed to be followed</strong>.<br><br>
+                
+                But emotional people make <em>messy</em> murders.<br>
+                This one was precise.<br><br>
+                
+                The smartwatch spike occurred 3 minutes after Kunal left.<br>
+                Toxins don't wait politely for suspects to establish alibis.<br><br>
+                
+                </span>
+                
+                <span style="color: #666; font-size: 11px;">
+                Someone understood investigators.<br>
+                Someone knew you'd follow the emotions.<br>
+                Someone wanted you to stop at Kunal.<br><br>
+                
+                <strong style="color: #ff6b6b;">WARNING</strong><br>
+                The answer wasn't about who called last.<br>
+                ...It was about who had the <em>foresight</em> to manipulate the narrative.
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Animate trait bars on load
+        window.addEventListener('load', () => {
+            const traitFills = document.querySelectorAll('.trait-fill');
+            setTimeout(() => {
+                traitFills.forEach(fill => {
+                    const width = fill.style.width;
+                    fill.style.width = '0%';
+                    setTimeout(() => {
+                        fill.style.width = width;
+                    }, 100);
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>
