@@ -171,7 +171,7 @@ function choose(choice) {
 
   document.getElementById("backBtn").style.display = "none";
 
-  /* FALSE PATH */
+  
   if (choice === "caller") {
     falsePathTaken = true;
 
@@ -192,9 +192,20 @@ Conclusion confidence: HIGH
 <span class="system">
 Emotional correlation is not causation.
 </span>`;
+
+     <button class="choice" id="proceedBtn">
+Proceed to Access Logs
+</button>
+</div>`;
+
+    document
+      .getElementById("proceedBtn")
+      .addEventListener("click", () => {
+        window.location.href =
+          "https://sanvisharma850.github.io/access-logs/stage1.html";
   }
 
-  /* CORRECT PATH */
+  
   if (choice === "editor") {
     audio.heartbeat.pause();
     audio.unlock.play();
