@@ -6,7 +6,7 @@ if (stage !== "page_2") {
     <p>Some entries are missing.</p>
 
     <p>
-      <a href="Stages1.html" style="
+      <a href="https://sanvisharma850.github.io/institute-verify/Stages1.html" style="
         color: #0ff;
         text-decoration: none;
         font-family: monospace;
