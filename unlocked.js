@@ -191,12 +191,13 @@ Conclusion confidence: HIGH
 
 <span class="system">
 Emotional correlation is not causation.
-</span>`;
+</span>
 
-     <button class="choice" id="proceedBtn">
+<button class="choice" id="proceedBtn">
 Proceed to Access Logs
 </button>
-</div>`;
+`;
+
 
     document
       .getElementById("proceedBtn")
