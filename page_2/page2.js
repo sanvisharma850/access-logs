@@ -4,6 +4,9 @@ if (stage !== "page_2") {
   document.body.innerHTML = `
     <h1>403 — Incomplete Log Chain</h1>
     <p>Some entries are missing.</p>
+    setTimeout(() => {
+            window.location.href = "Stages1.html";
+          }, 2500);
   `;
   throw new Error("Unauthorized progression");
 }
