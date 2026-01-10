@@ -203,6 +203,7 @@ Proceed to Access Logs
       .addEventListener("click", () => {
         window.location.href =
           "https://sanvisharma850.github.io/access-logs/stage1.html";
+      });
   }
 
   
