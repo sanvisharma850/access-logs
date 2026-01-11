@@ -319,43 +319,32 @@
   </audio>
 
   <script>
-    // Check if coming from button click (via URL parameter)
-    const urlParams = new URLSearchParams(window.location.search);
-    const shouldAutoplay = urlParams.get('autoplay') === 'true';
+    // Immediately try to play on page load
+    const audio = document.getElementById('adminAudio');
+    audio.volume = 0.3;
+    audio.loop = true;
     
-    window.addEventListener('DOMContentLoaded', function() {
-      const audio = document.getElementById('adminAudio');
-      audio.volume = 0.3;
-      audio.loop = true;
-      
-      if (shouldAutoplay) {
-        // Immediate play attempt (works when navigated via button)
-        setTimeout(() => {
-          audio.play().then(() => {
-            console.log('Audio playing automatically');
-          }).catch(error => {
-            console.log('Autoplay blocked, trying alternative...');
-            // Backup: play on any interaction
-            const playOnce = () => {
-              audio.play();
-              document.removeEventListener('click', playOnce);
-              document.removeEventListener('keydown', playOnce);
-              document.removeEventListener('mousemove', playOnce);
-            };
-            document.addEventListener('click', playOnce);
-            document.addEventListener('keydown', playOnce);
-            document.addEventListener('mousemove', playOnce);
-          });
-        }, 100); // Small delay helps with autoplay
-      } else {
-        // Manual navigation - require interaction
-        const playOnInteraction = () => {
-          audio.play();
-        };
-        document.addEventListener('click', playOnInteraction, { once: true });
-        document.addEventListener('keydown', playOnInteraction, { once: true });
-      }
+    // Attempt 1: Play immediately (works if user just clicked)
+    audio.play().catch(() => {
+      console.log('Initial autoplay blocked');
     });
+    
+    // Attempt 2: Play after tiny delay
+    setTimeout(() => {
+      audio.play().catch(() => {
+        console.log('Delayed autoplay blocked');
+      });
+    }, 50);
+    
+    // Attempt 3: Play on ANY user interaction
+    const forcePlay = () => {
+      audio.play();
+    };
+    
+    document.addEventListener('click', forcePlay, { once: true });
+    document.addEventListener('keydown', forcePlay, { once: true });
+    document.addEventListener('mousemove', forcePlay, { once: true });
+    document.addEventListener('touchstart', forcePlay, { once: true });
 
     // Create blood drips
     function createBloodDrip() {

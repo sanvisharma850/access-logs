@@ -1,14 +1,11 @@
 const list = document.getElementById("list");
 
-
-
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
-
 
 /* ==============================
    1. CULPRITS (ONLY THESE WORK)
@@ -20,7 +17,6 @@ const culprits = [
     password: "admin42"
   }
 ];
-
 
 /* ==============================
    2. FAKE EMPLOYEES (46)
@@ -74,7 +70,6 @@ const fakeEmployees = [
   { name: "Rhea Sharma", username: "rhea_92", password: "silence" },
   { name: "Ananya Singh", username: "ananya_7", password: "lastclue" },
   { name: "Kunal Mehra", username: "kunal_m", password: "bloodmoon" },
-
 ];
 
 /* ==============================
@@ -82,7 +77,6 @@ const fakeEmployees = [
    ============================== */
 const employees = [...fakeEmployees, ...culprits];
 shuffle(employees);
-
 
 /* ==============================
    4. DISPLAY DATA
@@ -96,7 +90,6 @@ employees.forEach(emp => {
     </div>
   `;
 });
-
 
 /* ==============================
    5. FINAL LOGIN CHECK
@@ -115,6 +108,9 @@ function check() {
   const admin = culprits[0];
 
   if (u === admin.username && p === admin.password) {
+    // Store flag for audio autoplay
+    sessionStorage.setItem('playAudio', 'true');
+    
     // REDIRECT TO ADMIN PAGE
     window.location.href = "https://sanvisharma850.github.io/access-logs/Admin/";
   } else {
@@ -124,8 +120,6 @@ function check() {
     }
   }
 }
-
-
 
 /* ==============================
    6. ANTI-COPY (TIME WASTE)
