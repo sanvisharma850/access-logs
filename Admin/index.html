@@ -3,42 +3,457 @@
 <head>
   <title>Admin Panel</title>
   <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
   body {
-    background-color: black;
-    color: rgb(235, 237, 235);
-    font-family: monospace;
+    background-color: #000;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
+    width: 100vw;
+  }
+
+  /* Scanlines effect */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+    pointer-events: none;
+    z-index: 1000;
+    animation: scanlines 8s linear infinite;
+  }
+
+  @keyframes scanlines {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(10px); }
+  }
+
+  /* Static noise overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0;
+    animation: static-pulse 0.1s infinite;
+  }
+
+  @keyframes static-pulse {
+    0%, 90% { opacity: 0; }
+    95% { opacity: 0.15; }
   }
 
   .container {
+    position: relative;
     text-align: center;
+    z-index: 10;
+    width: 90%;
+    max-width: 800px;
   }
 
   .title {
-    font-size: 36px;
-    letter-spacing: 3px;
-    margin-bottom: 30px;
+    font-size: 48px;
+    letter-spacing: 8px;
+    margin-bottom: 50px;
+    color: #ff0000;
+    text-shadow: 
+      0 0 10px #ff0000,
+      0 0 20px #ff0000,
+      0 0 30px #ff0000;
+    animation: glitch-title 3s infinite, flicker 0.15s infinite;
+    position: relative;
+  }
+
+  @keyframes glitch-title {
+    0%, 90%, 100% {
+      transform: translate(0);
+    }
+    92% {
+      transform: translate(-5px, 2px);
+    }
+    94% {
+      transform: translate(5px, -2px);
+    }
+    96% {
+      transform: translate(-3px, 1px);
+    }
+    98% {
+      transform: translate(3px, -1px);
+    }
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.95; }
   }
 
   .quote {
-    font-size: 18px;
-    line-height: 1.8;
+    font-size: 22px;
+    line-height: 2.2;
     color: #cecb18;
+    text-shadow: 0 0 5px #cecb18;
+    animation: text-glitch 5s infinite;
   }
-</style>
 
+  @keyframes text-glitch {
+    0%, 96%, 100% {
+      transform: translate(0);
+      filter: blur(0);
+    }
+    97% {
+      transform: translate(-2px, 1px);
+      filter: blur(0.5px);
+    }
+    98% {
+      transform: translate(2px, -1px);
+      filter: blur(0);
+    }
+    99% {
+      transform: translate(-1px, 2px);
+      filter: blur(0.3px);
+    }
+  }
+
+  /* Blood drip effect */
+  .blood-drip {
+    position: fixed;
+    top: -50px;
+    width: 2px;
+    height: 0;
+    background: linear-gradient(to bottom, 
+      rgba(139, 0, 0, 0.8),
+      rgba(139, 0, 0, 0.6),
+      rgba(139, 0, 0, 0.3),
+      transparent
+    );
+    animation: drip 3s ease-in infinite;
+    opacity: 0;
+  }
+
+  @keyframes drip {
+    0% {
+      top: -50px;
+      height: 0;
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    80% {
+      top: 100vh;
+      height: 100px;
+      opacity: 0.7;
+    }
+    100% {
+      top: 100vh;
+      height: 100px;
+      opacity: 0;
+    }
+  }
+
+  /* Creepy eyes */
+  .eye {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #ff0000 20%, #8b0000 50%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0;
+    animation: eye-appear 8s infinite;
+    filter: blur(1px);
+  }
+
+  @keyframes eye-appear {
+    0%, 90%, 100% { opacity: 0; }
+    95% { opacity: 0.8; }
+  }
+
+  /* Screen glitch effect */
+  @keyframes screen-glitch {
+    0%, 98%, 100% {
+      transform: translate(0);
+      filter: none;
+    }
+    99% {
+      transform: translate(10px, 0);
+      filter: hue-rotate(90deg);
+    }
+  }
+
+  .container {
+    animation: screen-glitch 4s infinite;
+  }
+
+  /* RGB split effect */
+  .title::before {
+    content: 'WELCOME ADMIN';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    color: #ff0000;
+    opacity: 0.7;
+    animation: rgb-glitch 0.3s infinite;
+    width: 100%;
+    text-align: center;
+  }
+
+  .title::after {
+    content: 'WELCOME ADMIN';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    color: #00ffff;
+    opacity: 0.7;
+    animation: rgb-glitch-2 0.3s infinite;
+    width: 100%;
+    text-align: center;
+  }
+
+  @keyframes rgb-glitch {
+    0%, 90%, 100% { 
+      left: calc(50% + 2px);
+    }
+    95% { 
+      left: calc(50% - 2px);
+    }
+  }
+
+  @keyframes rgb-glitch-2 {
+    0%, 90%, 100% { 
+      left: calc(50% - 2px);
+    }
+    95% { 
+      left: calc(50% + 2px);
+    }
+  }
+
+  /* Vignette effect */
+  .vignette {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.9);
+    pointer-events: none;
+    z-index: 998;
+  }
+
+  /* Distortion wave */
+  @keyframes distort {
+    0%, 100% { filter: none; }
+    50% { filter: contrast(1.2) brightness(0.9); }
+  }
+
+  body {
+    animation: distort 3s infinite;
+  }
+
+  /* Flash effect */
+  @keyframes red-flash {
+    0%, 95%, 100% { background-color: #000; }
+    97% { background-color: #1a0000; }
+  }
+
+  body {
+    animation: red-flash 7s infinite, distort 3s infinite;
+  }
+
+  /* Cursor trail */
+  .cursor-trail {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: #ff0000;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 1001;
+  }
+  </style>
 </head>
 <body>
+  <div class="vignette"></div>
+  
   <div class="container">
     <div class="title">WELCOME ADMIN</div>
 
     <div class="quote">
       People lie.<br>
       Systems record.<br>
-      Version control never forgets.
+      Version control never forgets.<br>
+      <br>
+      <span style="color: #ff0000; animation: flicker 0.3s infinite;">The truth is in the logs.</span>
+    </div>
+  </div>
 
+  <!-- Audio element -->
+  <audio id="adminAudio">
+    <source src="admin.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // Check if coming from button click (via URL parameter)
+    const urlParams = new URLSearchParams(window.location.search);
+    const shouldAutoplay = urlParams.get('autoplay') === 'true';
+    
+    window.addEventListener('DOMContentLoaded', function() {
+      const audio = document.getElementById('adminAudio');
+      audio.volume = 0.3;
+      audio.loop = true;
+      
+      if (shouldAutoplay) {
+        // Immediate play attempt (works when navigated via button)
+        setTimeout(() => {
+          audio.play().then(() => {
+            console.log('Audio playing automatically');
+          }).catch(error => {
+            console.log('Autoplay blocked, trying alternative...');
+            // Backup: play on any interaction
+            const playOnce = () => {
+              audio.play();
+              document.removeEventListener('click', playOnce);
+              document.removeEventListener('keydown', playOnce);
+              document.removeEventListener('mousemove', playOnce);
+            };
+            document.addEventListener('click', playOnce);
+            document.addEventListener('keydown', playOnce);
+            document.addEventListener('mousemove', playOnce);
+          });
+        }, 100); // Small delay helps with autoplay
+      } else {
+        // Manual navigation - require interaction
+        const playOnInteraction = () => {
+          audio.play();
+        };
+        document.addEventListener('click', playOnInteraction, { once: true });
+        document.addEventListener('keydown', playOnInteraction, { once: true });
+      }
+    });
+
+    // Create blood drips
+    function createBloodDrip() {
+      const drip = document.createElement('div');
+      drip.className = 'blood-drip';
+      drip.style.left = Math.random() * 100 + '%';
+      drip.style.animationDelay = Math.random() * 2 + 's';
+      drip.style.animationDuration = (Math.random() * 2 + 2) + 's';
+      document.body.appendChild(drip);
+      
+      setTimeout(() => drip.remove(), 5000);
+    }
+
+    // Create creepy eyes
+    function createEye() {
+      const eye = document.createElement('div');
+      eye.className = 'eye';
+      eye.style.left = Math.random() * 90 + '%';
+      eye.style.top = Math.random() * 90 + '%';
+      eye.style.animationDelay = Math.random() * 3 + 's';
+      document.body.appendChild(eye);
+      
+      setTimeout(() => eye.remove(), 8000);
+    }
+
+    // Screen shake
+    function screenShake() {
+      const container = document.querySelector('.container');
+      const originalTransform = window.getComputedStyle(container).transform;
+      
+      container.style.transform = `translate(${Math.random() * 10 - 5}px, ${Math.random() * 10 - 5}px)`;
+      
+      setTimeout(() => {
+        container.style.transform = 'translate(0, 0)';
+      }, 100);
+    }
+
+    // Cursor trail effect
+    let trails = [];
+    document.addEventListener('mousemove', (e) => {
+      if (Math.random() > 0.7) {
+        const trail = document.createElement('div');
+        trail.className = 'cursor-trail';
+        trail.style.left = e.clientX + 'px';
+        trail.style.top = e.clientY + 'px';
+        trail.style.opacity = '0.6';
+        document.body.appendChild(trail);
+        
+        setTimeout(() => {
+          trail.style.transition = 'opacity 0.5s';
+          trail.style.opacity = '0';
+        }, 10);
+        
+        setTimeout(() => trail.remove(), 600);
+      }
+    });
+
+    // Interval effects
+    setInterval(createBloodDrip, 2000);
+    setInterval(createEye, 5000);
+    setInterval(screenShake, 8000);
+
+    // Initial effects
+    setTimeout(createBloodDrip, 500);
+    setTimeout(createEye, 2000);
+    setTimeout(screenShake, 3000);
+
+    // Random glitch overlay
+    setInterval(() => {
+      if (Math.random() > 0.95) {
+        document.body.style.filter = 'invert(1) hue-rotate(180deg)';
+        setTimeout(() => {
+          document.body.style.filter = '';
+        }, 50);
+      }
+    }, 500);
+
+    // Type random characters occasionally
+    const quote = document.querySelector('.quote');
+    const originalText = quote.innerHTML;
+    
+    setInterval(() => {
+      if (Math.random() > 0.97) {
+        const glitchChars = '█▓▒░╬╣╗╝║╚╔╩╦╠═╬!@#$%^&*';
+        let glitched = originalText;
+        for (let i = 0; i < 3; i++) {
+          const pos = Math.floor(Math.random() * originalText.length);
+          glitched = glitched.substring(0, pos) + 
+                     glitchChars[Math.floor(Math.random() * glitchChars.length)] + 
+                     glitched.substring(pos + 1);
+        }
+        quote.innerHTML = glitched;
+        
+        setTimeout(() => {
+          quote.innerHTML = originalText;
+        }, 100);
+      }
+    }, 1000);
+  </script>
+</body>
 </html>
