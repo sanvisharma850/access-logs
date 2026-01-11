@@ -51,35 +51,23 @@
     who never needs permission?
   </p>
 
-  <button onclick="right()">Option A — Missing role</button>
-  <button onclick="wrong()">Option B — Missing username</button>
-  
-</div>
+<button id="optionA">Option A — Missing role</button>
+<button id="optionB">Option B — Missing username</button>
 
 <script>
-  function wrong() {
-    localStorage.setItem("challenge4_outcome", "false_branch");
-
-    
-
-    // Send to a convincing dead end or loop
-    setTimeout(() => {
-      window.location.href = "https://sanvisharma850.github.io/access-logs/wrong-file.html";";
-    }, 800);
-  }
-
-  function right() {
-    // Legitimate access token
+  document.getElementById("optionA").addEventListener("click", () => {
+    // Correct answer → Page 1
     localStorage.setItem("challenge4_completed", "true");
-    localStorage.setItem("challenge5_stage", "page_1");
+    window.location.href = "https://sanvisharma850.github.io/access-logs/page_1/";
+  });
 
-    
-
-    setTimeout(() => {
-      window.location.href = "https://sanvisharma850.github.io/access-logs/page_1/";
-    }, 800);
-  }
+  document.getElementById("optionB").addEventListener("click", () => {
+    // Wrong answer → wrong-file
+    localStorage.setItem("challenge4_outcome", "false_branch");
+    window.location.href = "https://sanvisharma850.github.io/access-logs/wrong-file.html";
+  });
 </script>
+
 
 
 </body>
